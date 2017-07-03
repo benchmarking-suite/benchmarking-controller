@@ -1,0 +1,8 @@
+
+
+- remove benchmarks config file parsing from Benchmarking Suite v1 (BS1)
+
+
+Api:
+- add /benchmarks
+- add /providers
