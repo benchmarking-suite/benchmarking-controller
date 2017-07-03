@@ -24,12 +24,12 @@ from appdirs import user_data_dir
 from typing import Dict
 
 from org.benchsuite.model.benchmark import load_benchmark_from_config_file
-from org.benchsuite.model.exception import ControllerConfigurationException
+from org.benchsuite.model.exception import ControllerConfigurationException, UndefinedExecutionException
 from org.benchsuite.model.execution import BenchmarkExecution
 from org.benchsuite.model.provider import load_service_provider_from_config_file
 from org.benchsuite.model.session import BenchmarkingSession
 from org.benchsuite.persistence.session import SessionStorageManager
-
+from org.benchsuite.util import print_message
 
 CONFIG_FOLDER_VARIABLE_NAME = 'BENCHSUITE_CONFIG_FOLDER'
 STORAGE_FOLDER_VARIABLE_NAME = 'BENCHSUITE_STORAGE_FOLDER'
@@ -96,7 +96,7 @@ class BenchmarkingController():
         self.session_storage.add(s)
         return s
 
-    def destroy_session(self, session_id):
+    def destroy_session(self, session_id: str) -> None:
         s = self.get_session(session_id)
         s.destroy()
         self.session_storage.remove(s)
@@ -109,9 +109,9 @@ class BenchmarkingController():
             try:
                 return s.get_execution(exec_id)
             except:
-                print("Not found. FIXME")
+                pass
 
-        return None
+        raise UndefinedExecutionException('Execution with id={0} does not exist'.format(exec_id))
 
     def new_execution(self, session_id: str, tool: str, workload: str) -> BenchmarkExecution:
         s = self.session_storage.get(session_id)
@@ -127,6 +127,12 @@ class BenchmarkingController():
     def run_execution(self, exec_id, async=False, session_id=None):
         e = self.get_execution(exec_id, session_id)
         e.execute(async=async)
+
+
+    def collect_execution_results(self, exec_id, session_id=None):
+        e = self.get_execution(exec_id, session_id)
+        return e.collect_result()
+
 
     # def create_new_execution(self, env_id, tool, workload):
     #     r = env_manager.get(env_id)

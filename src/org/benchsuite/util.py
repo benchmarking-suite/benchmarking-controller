@@ -89,9 +89,9 @@ def run_ssh_cmd(vm, cmd, needs_pty=False):
         stdin, stdout, stderr = ssh.exec_command(cmd, get_pty=needs_pty)
         exit_status = stdout.channel.recv_exit_status()
 
-        out = stdout.read()
-        err = stderr.read()
-        print('out: {0}\nerr: {1}\nexit status: {2}'.format(out, err, exit_status))
+        out = stdout.read().decode("utf-8")
+        err = stderr.read().decode("utf-8")
+        #print('out: {0}\nerr: {1}\nexit status: {2}'.format(out, err, exit_status))
         return (exit_status, out, err)
 
         # chan = ssh.get_transport().open_session()

@@ -21,9 +21,8 @@
 import os
 
 from org.benchsuite.model.common import TestExecutor
-from eu.artist.benchmarking.benchmark import BenchmarkFactory
 from org.benchsuite.model.exception import BashCommandExecutionFailedException
-from org.benchsuite.util import run_ssh_cmd, ssh_transfer_output
+from org.benchsuite.util import run_ssh_cmd
 
 
 def get_output(vm, cmd):
@@ -61,7 +60,7 @@ echo \$SECONDS > {8}
 rm {1}
 exit \`cat {7}\`
 EOF
-bash {0}'''.format(script, lock, working_dir, script_wrapper, cmd, out, err, ret, runtime)
+bash {0}'''.format(script_wrapper, lock, working_dir, script, cmd, out, err, ret, runtime)
 
     # decorated_cmd = 'cat << EOF > {0}\n' \
     #     'touch {1}\n' \
@@ -103,6 +102,32 @@ class PureRemoteBashExecutor(TestExecutor):
         self.env = execution.exec_env
         self.test_scripts = execution.test.scripts
 
+    def _get_filename(self, phase, type):
+
+        if type == 'cmd_stdout':
+            extension = 'out'
+
+        if type == 'cmd_stderr':
+            extension = 'err'
+
+        if type == 'cmd_exit_value':
+            extension = 'ret'
+
+        if type == 'cmd_script':
+            extension = 'sh'
+
+        if type == 'cmd_wrapper_script':
+            extension = 'wrapper.sh'
+
+        if type == 'cmd_lock':
+            extension = 'lock'
+
+        if type == 'cmd_time':
+            extension = 'time'
+
+        return '/tmp/{0}-{1}.{2}'.format(phase, self.id, extension)
+
+
     def install(self):
         vm0 = self.env.vms[0]
         cmd = self.test_scripts.get_install_script(vm0.platform)
@@ -119,9 +144,12 @@ class PureRemoteBashExecutor(TestExecutor):
         if cmd:
             run_ssh_script(vm0, cmd, 'run', self.id, async=async)
 
-    def collect(self):
+    def collect_results(self):
         vm0 = self.env.vms[0]
-        ssh_transfer_output(vm0, 'run-'+self.id, '/tmp/run-'+self.id+".out")
+        out = get_output(vm0, 'cat ' + self._get_filename('run', 'cmd_stdout'))
+        err = get_output(vm0, 'cat ' + self._get_filename('run', 'cmd_stderr'))
+
+        return out, err
 
     def get_runtime(self, phase):
         vm0 = self.env.vms[0]

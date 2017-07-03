@@ -22,6 +22,7 @@ import os
 
 import pickle
 
+from org.benchsuite.model.exception import UndefinedSessionException
 from org.benchsuite.util import print_message
 
 STORAGE_SESSIONS_FILE = 'sessions.dat'
@@ -49,6 +50,9 @@ class SessionStorageManager:
         return self.sessions.values()
 
     def get(self, session_id):
+        if session_id not in self.sessions:
+            raise UndefinedSessionException('The session with id={0} does not exist'.format(session_id))
+
         return self.sessions[session_id]
 
     def add(self, session):

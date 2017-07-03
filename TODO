@@ -1,4 +1,6 @@
 - rewrite README file
+- username, password and other connection details are stored in the session and loaded from the sessions file. They should be always loaded from configuration file every time
+
 
 Api:
 - add /benchmarks

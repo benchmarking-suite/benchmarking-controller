@@ -22,6 +22,7 @@ import argparse
 import os
 
 import sys
+from datetime import datetime
 
 from org.benchsuite.controller import BenchmarkingController, CONFIG_FOLDER_VARIABLE_NAME
 from org.benchsuite.util import print_message, set_output_stream, set_output_verbosity
@@ -34,24 +35,25 @@ RUNTIME_NOT_AVAILABLE_RETURN_CODE = 1
 def list_executions_cmd(args):
 
     table = PrettyTable()
-    table.field_names = ["Id", "Type"]
+    table.field_names = ["Id", "Type", "Session"]
 
     with BenchmarkingController(args.config) as bc:
         execs = bc.list_executions()
         for e in execs:
-            table.add_row([e.id, ''])
+            table.add_row([e.id, '', e.session.id])
 
     print_message(table.get_string())
 
 def list_sessions_cmd(args):
 
     table = PrettyTable()
-    table.field_names = ["Id", "Type"]
+    table.field_names = ["Id", "Type", "Created"]
 
     with BenchmarkingController(args.config) as bc:
         sessions = bc.list_sessions()
         for s in sessions:
-            table.add_row([s.id, s.provider.type])
+            created = datetime.fromtimestamp(s.created).strftime('%Y-%m-%d %H:%M:%S')
+            table.add_row([s.id, s.provider.type, created])
 
     print_message(table.get_string())
 
@@ -59,6 +61,7 @@ def list_sessions_cmd(args):
 def destroy_session_cmd(args):
     with BenchmarkingController(args.config) as bc:
         bc.destroy_session(args.id)
+        print_message('Session {0} successfully destroyed'.format(args.id))
 
 
 def new_session_cmd(args):
@@ -75,6 +78,13 @@ def new_execution_cmd(args):
 def prepare_execution_cmd(args):
     with BenchmarkingController(args.config) as bc:
         bc.prepare_execution(args.id)
+
+def collect_results_cmd(args):
+    with BenchmarkingController(args.config) as bc:
+        out, err = bc.collect_execution_results(args.id)
+        print_message(str(out))
+        print_message(str(err))
+
 
 
 def run_execution_cmd(args):
@@ -182,8 +192,10 @@ def main(cmdline_args):
     parser_a = subparsers.add_parser('list-exec', help='a help')
     parser_a.set_defaults(func=list_executions_cmd)
 
+    parser_a = subparsers.add_parser('collect-exec', help='a help')
+    parser_a.add_argument('id', type=str, help='bar help')
+    parser_a.set_defaults(func=collect_results_cmd)
 
-    os.environ[CONFIG_FOLDER_VARIABLE_NAME] = '/home/ggiammat/projects/ENG.CloudPerfect/workspace/testing/bsconfig'
 
     args = parser.parse_args(cmdline_args)
 

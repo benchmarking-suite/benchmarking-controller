@@ -40,6 +40,9 @@ class BenchmarkExecution:
     def execute(self, async=False):
         self.test.execute(self, async=async)
 
+    def collect_result(self):
+        return self.test.get_result(self)
+
 class ExecutionEnvironment(ABC):
 
     def __init__(self):

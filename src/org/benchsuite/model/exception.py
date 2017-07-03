@@ -21,9 +21,20 @@
 from typing import Any
 
 
+class UndefinedExecutionException(Exception):
+    pass
+
+class UndefinedSessionException(Exception):
+    pass
+
 class ControllerConfigurationException(Exception):
     pass
 
+class BenchmarkConfigurationException(Exception):
+    pass
+
+class ProviderConfigurationException(Exception):
+    pass
 
 class BashCommandExecutionFailedException(Exception):
 

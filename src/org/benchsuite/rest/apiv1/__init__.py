@@ -34,7 +34,7 @@ description = '''
 This is an API to access the Benchmarking Suite
 
 # Model
-[image](https://yuml.me/diagram/scruffy/class/[BenchmarkingSession]->[ServiceProvider], [BenchmarkingSession]<>->[BenchmarkExecution])
+![image](https://yuml.me/diagram/scruffy/class/[BenchmarkingSession]->[ServiceProvider], [BenchmarkingSession]<>->[BenchmarkExecution])
 
 ~~~
 
@@ -54,7 +54,7 @@ This is an API to access the Benchmarking Suite
 
 api = Api(
     blueprint,
-    title='My Title',
+    title='Benchmarking Suite REST API',
     version='1.0',
     description=description,
     # All API metadatas

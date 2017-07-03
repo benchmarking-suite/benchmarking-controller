@@ -20,7 +20,6 @@
 
 from flask_restplus import Namespace, Resource, fields
 
-from org.benchsuite.model.exception import ControllerConfigurationException
 from org.benchsuite.controller import BenchmarkingController
 from org.benchsuite.rest.apiv1.executions import execution_model, new_execution_model
 
@@ -39,6 +38,7 @@ provider_model = api.model('Provider', {
 session_model = api.model('Session', {
     'id': fields.String,
     'provider': fields.Nested(provider_model),
+    'created': fields.String,
     'executions': fields.String
 })
 

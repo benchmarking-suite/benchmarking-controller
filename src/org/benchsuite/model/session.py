@@ -21,6 +21,8 @@
 
 import uuid
 
+import time
+
 from org.benchsuite.model.execution import BenchmarkExecution
 from org.benchsuite.model.provider import ServiceProvider
 
@@ -30,6 +32,7 @@ class BenchmarkingSession:
     def __init__(self, provider: ServiceProvider):
         self.provider = provider
         self.id = str(uuid.uuid1())
+        self.created = time.time()
         self.executions = {}
 
     def new_execution(self, benchmark):

@@ -21,6 +21,7 @@
 from org.benchsuite.execution.vm_environment import VMSetExecutionEnvironmentRequest
 
 from org.benchsuite.model.benchmark import Benchmark
+from org.benchsuite.model.exception import BenchmarkConfigurationException
 from org.benchsuite.worker.sshworker import PureRemoteBashExecutor
 
 import os
@@ -150,8 +151,7 @@ class BenchmarkFactory:
             return instance
 
         except Exception as ex:
-            logger.error("Error loading benchmark test: {0}".format(ex))
-            return None
+            raise BenchmarkConfigurationException("Error loading benchmark test: {0}".format(ex))
 
 
 class BashCommandBenchmark(Benchmark):
@@ -170,6 +170,12 @@ class BashCommandBenchmark(Benchmark):
     def execute(self, execution, async=False):
         executor = PureRemoteBashExecutor(execution)
         executor.run(async=async)
+
+
+    def get_result(self, execution):
+        executor = PureRemoteBashExecutor(execution)
+        return executor.collect_results()
+
 
     @staticmethod
     def load_from_config_file(config, workload):

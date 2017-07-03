@@ -18,15 +18,20 @@
 # Developed in the ARTIST EU project (www.artist-project.eu) and in the
 # CloudPerfect EU project (https://cloudperfect.eu/)
 
+import os
+
 from org.benchsuite import cli
+from org.benchsuite.controller import CONFIG_FOLDER_VARIABLE_NAME
 
 if __name__ == '__main__':
 
-   # cli.main('new-session --provider filab-vicenza --service centos_medium'.split())
+   os.environ[CONFIG_FOLDER_VARIABLE_NAME] = '/home/ggiammat/projects/ENG.CloudPerfect/workspace/testing/bsconfig'
 
-   # cli.main('new-exec 2b9cfeeb-5fd3-11e7-a491-742b62857160 filebench Workload19'.split())
+   # cli.main('new-session --provider filab-vicenza --service ubuntu_large'.split())
 
-   cli.main('prepare-exec 334a0480-5fd3-11e7-a491-742b62857160'.split())
+   # cli.main('new-exec be3a3fe1-5ffd-11e7-a491-742b62857160 cloudsuite-graphanalytics Workload1'.split())
+
+   cli.main('run-exec 97321c8c-6008-11e7-a491-742b62857160'.split())
 
     # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
 
