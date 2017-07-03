@@ -1,7 +1,4 @@
-
-
-- remove benchmarks config file parsing from Benchmarking Suite v1 (BS1)
-
+- rewrite README file
 
 Api:
 - add /benchmarks
