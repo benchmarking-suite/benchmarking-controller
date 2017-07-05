@@ -22,7 +22,7 @@ import logging
 import os
 import pickle
 
-from benchsuite.model.exception import UndefinedSessionException
+from benchsuite.core.model.exception import UndefinedSessionException
 
 STORAGE_SESSIONS_FILE = 'sessions.dat'
 

@@ -23,10 +23,10 @@ import logging
 import sys
 from datetime import datetime
 
-from benchsuite.controller import BenchmarkingController
 from prettytable import PrettyTable
 
-from benchsuite.model.exception import BashCommandExecutionFailedException
+from benchsuite.controller import BenchmarkingController
+from benchsuite.core.model.exception import BashCommandExecutionFailedException
 
 RUNTIME_NOT_AVAILABLE_RETURN_CODE = 1
 

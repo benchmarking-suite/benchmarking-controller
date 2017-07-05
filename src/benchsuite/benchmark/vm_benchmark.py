@@ -21,9 +21,10 @@ import logging
 import re
 import textwrap
 
+from benchsuite.core.model.exception import BenchmarkConfigurationException
+
+from benchsuite.core.model.benchmark import Benchmark
 from benchsuite.execution.vm_environment import VMSetExecutionEnvironmentRequest
-from benchsuite.model.benchmark import Benchmark
-from benchsuite.model.exception import BenchmarkConfigurationException
 from benchsuite.worker.sshworker import PureRemoteBashExecutor
 
 logger = logging.getLogger(__name__)

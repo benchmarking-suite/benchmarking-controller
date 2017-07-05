@@ -20,7 +20,7 @@
 
 from typing import List
 
-from benchsuite.model.execution import ExecutionEnvironment, ExecutionEnvironmentRequest
+from benchsuite.core.model.execution import ExecutionEnvironment, ExecutionEnvironmentRequest
 
 
 class VM:

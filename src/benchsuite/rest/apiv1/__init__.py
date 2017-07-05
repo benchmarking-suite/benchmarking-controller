@@ -22,7 +22,7 @@
 from flask import Blueprint
 from flask_restplus import Api, fields
 
-from benchsuite.model.exception import ControllerConfigurationException, BashCommandExecutionFailedException
+from benchsuite.core.model.exception import ControllerConfigurationException, BashCommandExecutionFailedException
 
 blueprint = Blueprint('apiv1', __name__, url_prefix='/api/v1')
 
