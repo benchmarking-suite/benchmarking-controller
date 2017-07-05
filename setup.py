@@ -1,9 +1,9 @@
 from distutils.core import setup
 
 setup(
-    name='benchmarking-controller',
-    version='',
-    packages=['org', 'org.benchsuite'],
+    name='benchsuite.controller',
+    version='2.0.0',
+    packages=['benchsuite'],
     package_dir={'': 'src'},
     url='',
     license='',

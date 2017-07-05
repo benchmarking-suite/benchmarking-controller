@@ -20,8 +20,9 @@
 
 import os
 
-from org.benchsuite import cli
-from org.benchsuite.controller import CONFIG_FOLDER_VARIABLE_NAME
+from benchsuite.controller import CONFIG_FOLDER_VARIABLE_NAME
+
+from benchsuite import cli
 
 if __name__ == '__main__':
 
@@ -29,9 +30,9 @@ if __name__ == '__main__':
 
    # cli.main('new-session --provider filab-vicenza --service ubuntu_large'.split())
 
-   # cli.main('new-exec be3a3fe1-5ffd-11e7-a491-742b62857160 cloudsuite-graphanalytics Workload1'.split())
+   # cli.main('new-exec 0db8c055-6162-11e7-9084-742b62857160 idle idle30'.split())
 
-   cli.main('run-exec 97321c8c-6008-11e7-a491-742b62857160'.split())
+   cli.main('-vvv collect-exec 2b58dfae-6162-11e7-9084-742b62857160'.split())
 
     # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
 

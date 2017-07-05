@@ -44,7 +44,7 @@ Functionality expected in next versions
 ----
 
 -- Implementation of more Cloud Providers connectors (e.g.,GAE)
-
+````````
 Reference to the user/installation manual
 ----
 Chapter 5 of the following document:
