@@ -1,9 +1,12 @@
 from distutils.core import setup
 
+from setuptools import find_packages
+
 setup(
     name='benchsuite.controller',
-    version='2.0.0-dev5',
-    packages=['benchsuite'],
+    version='2.0.0-dev12',
+    packages=find_packages('src'),
+    namespace_packages=['benchsuite'],
     package_dir={'': 'src'},
     url='https://github.com/benchmarking-suite/benchmarking-controller',
     license='',
