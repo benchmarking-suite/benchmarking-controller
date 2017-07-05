@@ -155,7 +155,7 @@ def main(cmdline_args):
     logging_level = logging.ERROR
     logging_format = '%(message)s'
 
-    bench_suite_loggers = logging.getLogger('org.benchsuite')
+    bench_suite_loggers = logging.getLogger('benchsuite')
 
     if args.verbose == 1:
         logging_level = logging.INFO

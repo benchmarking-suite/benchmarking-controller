@@ -17,7 +17,9 @@
 #
 # Developed in the ARTIST EU project (www.artist-project.eu) and in the
 # CloudPerfect EU project (https://cloudperfect.eu/)
+import logging
 
+import sys
 from flask import Flask
 
 from benchsuite.rest.apiv1 import blueprint as blueprint1
@@ -31,4 +33,12 @@ app.register_blueprint(blueprint1)
 
 
 if __name__ == '__main__':
+
+
+    logging.basicConfig(
+        level=logging.DEBUG,
+        stream=sys.stdout)
+
+
+
     app.run(debug=True)
