@@ -14,7 +14,7 @@ Welcome to Benchmarking Suite's documentation!
 
 
 
-.. include:: ../../README.md
+.. include:: readme_link.srt
 
 
 
