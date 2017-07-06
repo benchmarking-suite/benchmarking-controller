@@ -96,8 +96,11 @@ def run_execution_cmd(args):
 
 def execute_onestep_cmd(args):
     with BenchmarkingController() as bc:
-        eid = bc.execute_onestep(args.provider_conf, args.service, args.tool)
-        print(eid)
+        out, err = bc.execute_onestep(args.provider, args.service_type, args.tool, args.workload)
+        print('============ STDOUT ============')
+        print(out)
+        print('============ STDERR ============')
+        print(err)
 
 
 def main(cmdline_args):
@@ -146,6 +149,13 @@ def main(cmdline_args):
     parser_a.set_defaults(func=collect_results_cmd)
 
 
+    parser_a = subparsers.add_parser('exec', help='create-env help')
+    parser_a.add_argument('--provider', type=str, help='bar help')
+    parser_a.add_argument('--service-type', type=str, help='bar help')
+    parser_a.add_argument('--tool', type=str, help='bar help')
+    parser_a.add_argument('--workload', type=str, help='bar help')
+    parser_a.set_defaults(func=execute_onestep_cmd)
+
     args = parser.parse_args(cmdline_args)
 
 
@@ -179,9 +189,12 @@ def main(cmdline_args):
         print(str(e))
         error_file = 'last_cmd_error.dump'
         with open(error_file, "w") as text_file:
-            text_file.write(" ========== STDOUT ==========\n")
+            text_file.write("========== CMD ==========\n")
+            text_file.write(e.cmd)
+            text_file.write('\n\n>>> Exit status was {0}\n'.format(e.exit_status))
+            text_file.write("\n\n========== STDOUT ==========\n")
             text_file.write(e.stdout)
-            text_file.write("\n\n ========== STDERR ==========\n")
+            text_file.write("\n\n========== STDERR ==========\n")
             text_file.write(e.stderr)
 
         print('Command stdout and stderr have been dumped to {0}'.format(error_file))

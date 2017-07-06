@@ -96,7 +96,10 @@ bash {0}'''.format(script_wrapper, lock, working_dir, script, cmd, out, err, ret
 
         e = BashCommandExecutionFailedException(
             'command {0} exit with status {1}. The output is: "{2}"'.format(cmd, exit_status, stdout))
-        e.set_output(cmd_out, cmd_err)
+        e.cmd = cmd
+        e.exit_status = exit_status
+        e.stdout = cmd_out
+        e.stderr = cmd_err
         raise e
 
     return exit_status, stdout, stderr
@@ -140,17 +143,15 @@ class PureRemoteBashExecutor(TestExecutor):
         vm0 = self.env.vms[0]
         cmd = self.test_scripts.get_install_script(vm0.platform)
         if cmd:
-            logger.info('Install commands to execute:\n%', cmd)
             run_ssh_script(vm0, cmd, 'install', self.id)
         else:
             logger.warning('No install commands to execute')
 
         cmd = self.test_scripts.get_postinstall_script(vm0.platform)
         if cmd:
-            logger.info('Post-Install commands to execute:\n%', cmd)
             run_ssh_script(vm0, cmd, 'post-install', self.id)
         else:
-            logger.warning('No install commands to execute')
+            logger.warning('No Post-install commands to execute')
 
 
     def run(self, async=False):

@@ -137,3 +137,13 @@ class BenchmarkingController():
     def collect_execution_results(self, exec_id, session_id=None):
         e = self.get_execution(exec_id, session_id)
         return e.collect_result()
+
+
+    def execute_onestep(self, provider, service_type: str, tool: str, workload: str) -> str:
+        session = self.new_session(provider, service_type)
+        execution = self.new_execution(session.id, tool, workload)
+        execution.prepare()
+        execution.execute()
+        out, err = execution.collect_result()
+        session.destroy()
+        return out, err

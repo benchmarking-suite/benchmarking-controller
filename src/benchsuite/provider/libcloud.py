@@ -22,6 +22,7 @@ import logging
 import time
 from configparser import ConfigParser
 
+from libcloud.compute.drivers.ec2 import EC2NetworkSubnet
 from libcloud.compute.providers import get_driver
 
 from benchsuite.core.model.execution import ExecutionEnvironmentRequest, ExecutionEnvironment
@@ -31,13 +32,12 @@ from benchsuite.util import run_ssh_cmd
 
 logger = logging.getLogger(__name__)
 
+
 class LibcloudComputeProvider(ServiceProvider):
 
-
-    def __init__(self, type, endpoint, access_id, secret_key):
+    def __init__(self, type, access_id, secret_key):
         super().__init__('libcloud')
         self.libcloud_type = type
-        self.endpoint = endpoint
         self.access_id = access_id
         self.secret_key = secret_key
         self.extra_params = None
@@ -50,6 +50,7 @@ class LibcloudComputeProvider(ServiceProvider):
         self.working_dir = None
         self.post_create_script = 'echo "Hello World!"'
         self.vms_pool = []
+
 
     def get_execution_environment(self, request: ExecutionEnvironmentRequest) -> ExecutionEnvironment:
         if len(self.vms_pool) < request.n_vms:
@@ -69,7 +70,7 @@ class LibcloudComputeProvider(ServiceProvider):
 
     def __get_libcloud_drv(self):
         drv = get_driver(self.libcloud_type)
-        driver = drv(self.access_id, self.secret_key, ex_force_auth_url=self.endpoint, **self.extra_params)
+        driver = drv(self.access_id, self.secret_key, **self.extra_params)
         return driver
 
     def __create_vm(self):
@@ -80,12 +81,20 @@ class LibcloudComputeProvider(ServiceProvider):
         #2. select the correct image and size
         sizes = driver.list_sizes()
         images = driver.list_images()
-        size = [s for s in sizes if s.name == self.size][0]
-        image = [i for i in images if i.name == self.image][0]
+        size = [s for s in sizes if s.id == self.size or s.name == self.size][0]
+        image = [i for i in images if i.id == self.image or i.name == self.image][0]
 
         logger.debug('Creating new Instance with image %s and size %s', image.name, size.name)
+
+
+        # fix for EC2
+        if self.libcloud_type == 'ec2' and 'ex_subnet' in self.extra_params:
+            self.extra_params['ex_subnet'] = EC2NetworkSubnet(self.extra_params['ex_subnet'], self.extra_params['ex_subnet'], 'available')
+
+
+
         #3. create the node and wait until RUNNING
-        node = driver.create_node(name='test node', image=image, size=size, ex_keyname=self.key_name)
+        node = driver.create_node(name='benchsuite-node', image=image, size=size, ex_keyname=self.key_name, **self.extra_params)
         driver.wait_until_running([node], wait_period=10)
 
         #4. refresh the info of the node
@@ -93,29 +102,29 @@ class LibcloudComputeProvider(ServiceProvider):
 
         logger.debug('New Instance created with node_id=%s', node.id)
 
-        #5. try to assign a free public ip
+        #5. try to assign a free public ip (currently work for Openstack only
         if not node.public_ips:
-            p_ip = self.__get_available_public_ip(driver)
-            if p_ip:
-                logger.debug('Trying to assign the public ip %s to the new instance', p_ip)
-                driver.ex_attach_floating_ip_to_node(node, p_ip)
-            else:
-                logger.warning('No floating public ips available!')
+            self.__assign_public_ip(driver, node)
 
+            # the new public ip could take some time to appear
+            while not node.public_ips:
+                time.sleep(5)
+                node = [i for i in driver.list_nodes() if i.uuid == node.uuid][0]
 
-        while not node.public_ips:
-            time.sleep(5)
-            node = [i for i in driver.list_nodes() if i.uuid == node.uuid][0]
-
-        # if we try to connect in ssh without waiting, it says that the key is not valid. Probably it takes time to
-        # complete the configuration of the public ip and/or copy of the public key on the vm
-        #time.sleep(15)
 
         vm = VM(node.id, node.public_ips[0], self.vm_user, self.key_path, self.platform, self.working_dir)
 
         self.__execute_post_create(vm, 5)
 
         return vm
+
+    def __assign_public_ip(self, driver, node):
+        p_ip = self.__get_available_public_ip(driver)
+        if p_ip:
+            logger.debug('Trying to assign the public ip %s to the new instance', p_ip)
+            driver.ex_attach_floating_ip_to_node(node, p_ip)
+        else:
+            logger.warning('No floating public ips available!')
 
 
     def __get_available_public_ip(self, driver):
@@ -128,22 +137,26 @@ class LibcloudComputeProvider(ServiceProvider):
         return None
 
     def __execute_post_create(self, vm, retries):
-        print('Try to connect to the new vm (max_retries={0})'.format(retries))
+        logger.info('Trying to connect to the new instance (max_retries={0})'.format(retries))
         try:
-            if retries > 0:
-                run_ssh_cmd(vm, self.post_create_script, needs_pty=True)
-        except:
-            time.sleep(10)
+            run_ssh_cmd(vm, self.post_create_script, needs_pty=True)
+        except Exception as ex:
             retries -= 1
-            self.__execute_post_create(vm,retries)
 
+            if retries > 0:
+                logger.warning('Error connecting ({0}). The instance could be not ready yet. '
+                               'Waiting 10 seconds and retry for {1} times'.format(str(ex), retries))
+                time.sleep(10)
+                self.__execute_post_create(vm,retries)
+            else:
+                logger.warning('Error connecting ({0}). Max number of retries achived. Raising the exception'.format(str(ex)))
+                raise ex
 
     @staticmethod
     def load_from_config_file(config: ConfigParser, service_type: str) -> ServiceProvider:
 
         cp = LibcloudComputeProvider(
             config['provider']['type'],
-            config['provider']['endpoint'],
             config['provider']['access_id'],
             config['provider']['secret_key']
         )
