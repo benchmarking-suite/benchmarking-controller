@@ -13,6 +13,11 @@ Welcome to Benchmarking Suite's documentation!
    otherfile
 
 
+
+.. include:: ../../README.md
+
+
+
 Indices and tables
 ==================
 

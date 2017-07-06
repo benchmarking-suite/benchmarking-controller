@@ -40,6 +40,33 @@ Known issues of this version:
 -- CloudSuite parser could not work correctly
 
 
+
+# Getting Started
+
+The Benchmarking Suite Controller is available on PyPI. To install just issue:
+
+~~~
+pip install benchsuite.controller
+~~~
+
+Before starting to use the Controller, it is necessary to create the configuration
+
+~~~
+git clone https://github.com/benchmarking-suite/benchsuite-configuration.git
+export BENCHSUITE_CONFIG_FOLDER=`pwd`/benchsuite-configuration
+~~~
+
+This will download a basic configuration from which you can start. However this not include any working configuration for
+cloud providers only examples. 
+
+
+You can add the configuration to your .bashrc for convenience 
+
+~~~
+echo "export BENCHSUITE_CONFIG_FOLDER=`pwd`/benchsuite-configuration" >> ~/.bashrc
+source ~/.bashrc
+~~~
+
 Functionality expected in next versions
 ----
 
