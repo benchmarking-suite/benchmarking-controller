@@ -6,8 +6,15 @@
 Welcome to Benchmarking Suite's documentation!
 ==============================================
 
-Ciao
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+
 
 Indices and tables
 ==================
-asd
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
