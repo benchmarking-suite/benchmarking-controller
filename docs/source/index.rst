@@ -10,6 +10,7 @@ Welcome to Benchmarking Suite's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   otherfile
 
 
 Indices and tables
