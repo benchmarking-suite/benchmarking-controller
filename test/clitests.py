@@ -32,9 +32,9 @@ if __name__ == '__main__':
 
    # cli.main('new-exec e95a1333-619a-11e7-9084-742b62857160 idle idle30'.split())
 
-   cli.main('-vvv exec --provider amazon-us-west-1 --service ubuntu_micro --tool ycsb-mongodb --workload WorkloadA'.split())
+   # cli.main('-vvv exec --provider amazon-us-west-1 --service ubuntu_micro --tool ycsb-mongodb --workload WorkloadA'.split())
 
     # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
 
 
-   # cli.main('-vvv list-sessions'.split())
+   cli.main('-vvv list-sessions'.split())
