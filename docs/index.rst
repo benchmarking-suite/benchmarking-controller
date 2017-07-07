@@ -21,6 +21,9 @@ Welcome to Benchmarking Suite's documentation!
 .. automodule:: benchsuite.controller
    :members:
 
+.. automodule:: benchsuite.core.model.benchmark
+   :members:
+
 Indices and tables
 ==================
 

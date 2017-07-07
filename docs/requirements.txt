@@ -1,9 +1,12 @@
 
-
-
+# In order to use autodoc extension, install the benchsuite.controller module.
+# This will also install automatically all the dependencies
+# (ReadTheDocs executes pip from the project root)
 -e .
 
-# these modules might not available on PyPI and so not installed when processing the setup.py
+
+# these modules might not available on PyPI and so not installed when processing the benchsuite.controller setup.py
 -e git+https://github.com/benchmarking-suite/benchsuite-core.git#egg=benchsuite.core
+
 
 sphinx-autodoc-typehints
