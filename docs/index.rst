@@ -12,6 +12,7 @@ Welcome to Benchmarking Suite's documentation!
 
    model
    rest
+   API Reference <http://www.example.com/lib/ios/0.1.0/api/>
 
 
 

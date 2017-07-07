@@ -6,3 +6,4 @@ appdirs
 prettytable
 paramiko
 apache-libcloud
+sphinx-autodoc-typehints
