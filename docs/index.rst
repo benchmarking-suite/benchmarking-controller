@@ -16,7 +16,7 @@ Welcome to Benchmarking Suite's documentation!
 
 
 
-.. include:: readme_link.srt
+.. include:: ../README.rst
 
 .. automodule:: benchsuite.controller
    :members:
