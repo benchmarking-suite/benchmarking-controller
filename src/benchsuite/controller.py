@@ -61,7 +61,7 @@ class ControllerConfiguration():
 
 class BenchmarkingController():
     """
-    Create and manage a new sqlite database.
+    The main class to control the benchmarking
     """
 
     def __init__(self, config_folder=None, storage_dir=None):
