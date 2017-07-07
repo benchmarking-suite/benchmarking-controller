@@ -1,7 +1,7 @@
 
 
 
--e ..
+-e .
 
 # these modules might not available on PyPI and so not installed when processing the setup.py
 -e git+https://github.com/benchmarking-suite/benchsuite-core.git#egg=benchsuite.core
