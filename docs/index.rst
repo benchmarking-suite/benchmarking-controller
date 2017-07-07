@@ -11,12 +11,14 @@ Welcome to Benchmarking Suite's documentation!
    :caption: Contents:
 
    model
+   rest
 
 
 
 .. include:: readme_link.srt
 
-
+.. automodule:: benchsuite.controller
+   :members:
 
 Indices and tables
 ==================

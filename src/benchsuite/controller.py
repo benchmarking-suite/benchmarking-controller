@@ -60,6 +60,9 @@ class ControllerConfiguration():
 
 
 class BenchmarkingController():
+    """
+    Create and manage a new sqlite database.
+    """
 
     def __init__(self, config_folder=None, storage_dir=None):
 
@@ -84,6 +87,10 @@ class BenchmarkingController():
         return exc_type is None
 
     def list_sessions(self) -> Dict[str, BenchmarkingSession]:
+        """
+        Lists the sessions
+        :return: Session list
+        """
         return self.session_storage.list()
 
     def list_executions(self):
