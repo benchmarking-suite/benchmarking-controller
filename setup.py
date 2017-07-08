@@ -1,8 +1,15 @@
 from distutils.core import setup
 
 from setuptools import find_packages
-from build_manpage import build_manpage
 
+
+# hack for ReadTheDocs builds. Since the build_manpages must be downloaded from GitHub and it is done in the same
+# requirements file
+try:
+    from build_manpage import build_manpage
+    cmdclass = {'build_manpage': build_manpage}
+except ImportError:
+    cmdclass = {}
 
 setup(
     name='benchsuite.controller',
@@ -18,9 +25,5 @@ setup(
     author_email='gabriele.giammatteo@eng.it',
     description='',
     install_requires=['appdirs', 'prettytable', 'paramiko', 'apache-libcloud', 'benchsuite.core'],
-    cmdclass={'build_manpage': build_manpage},
-
-    #this does not seem to work (see: https://github.com/pypa/pip/issues/2381)
-    setup_requires=['argparse-manpage'],
-    dependency_links = ['http://github.com/gabrielegiammatteo/build_manpage/tarball/master#argparse-manpage-0.0.1']
+    cmdclass= cmdclass
 )
