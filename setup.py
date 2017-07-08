@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 from setuptools import find_packages
-from benchsuite.build_manpage import build_manpage
+from build_manpage import build_manpage
 
 
 setup(
