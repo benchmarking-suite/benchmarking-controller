@@ -112,6 +112,7 @@ def get_options_parser():
     parser.add_argument('--config', '-c', type=str, help='foo help')
     subparsers = parser.add_subparsers(help='sub-command help')
 
+
     # create the parser for the "a" command
     # new-session --provider-conf [name] --service-type [name]
     parser_a = subparsers.add_parser('new-session', help='create-env help')
@@ -162,6 +163,10 @@ def get_options_parser():
 def main(cmdline_args):
 
     parser = get_options_parser()
+
+
+    print(parser.format_usage())
+    sys.exit()
 
     args = parser.parse_args(cmdline_args)
 
