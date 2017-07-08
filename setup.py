@@ -18,5 +18,9 @@ setup(
     author_email='gabriele.giammatteo@eng.it',
     description='',
     install_requires=['appdirs', 'prettytable', 'paramiko', 'apache-libcloud', 'benchsuite.core'],
-    cmdclass={'build_manpage': build_manpage}
+    cmdclass={'build_manpage': build_manpage},
+
+    #this does not seem to work (see: https://github.com/pypa/pip/issues/2381)
+    setup_requires=['argparse-manpage'],
+    dependency_links = ['http://github.com/gabrielegiammatteo/build_manpage/tarball/master#argparse-manpage-0.0.1']
 )
