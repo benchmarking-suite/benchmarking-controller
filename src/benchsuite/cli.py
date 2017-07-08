@@ -103,7 +103,8 @@ def execute_onestep_cmd(args):
         print(err)
 
 
-def main(cmdline_args):
+
+def get_options_parser():
     # create the top-level parser
     parser = argparse.ArgumentParser(prog='PROG')
     parser.add_argument('--foo', action='store_true', help='foo help')
@@ -155,6 +156,12 @@ def main(cmdline_args):
     parser_a.add_argument('--tool', type=str, help='bar help')
     parser_a.add_argument('--workload', type=str, help='bar help')
     parser_a.set_defaults(func=execute_onestep_cmd)
+
+    return parser
+
+def main(cmdline_args):
+
+    parser = get_options_parser()
 
     args = parser.parse_args(cmdline_args)
 

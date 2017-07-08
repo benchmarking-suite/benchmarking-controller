@@ -8,6 +8,7 @@ setup(
     packages=find_packages('src'),
     namespace_packages=['benchsuite'],
     package_dir={'': 'src'},
+    scripts=['src/scripts/benchsuite'],
     url='https://github.com/benchmarking-suite/benchsuite-controller',
     license='',
     author='Gabriele Giammatteo',
