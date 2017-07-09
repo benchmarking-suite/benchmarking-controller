@@ -3,6 +3,7 @@ from distutils.core import setup
 
 from setuptools import find_packages
 
+sys.path.insert(0, 'src/')
 from benchsuite.manpage_builder import build_manpage
 
 
