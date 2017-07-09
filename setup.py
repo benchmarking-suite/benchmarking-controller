@@ -1,10 +1,28 @@
+
+from setuptools import setup, find_packages
+from setuptools.command.install import install
+
+class PreInstallScript(install):
+
+    def run(self):
+        sys.path.insert(0, 'src/')
+
+        bm = build_manpage(self.distribution)
+        bm.output = 'benchsuite.1'
+        bm.parser = 'benchsuite.cli:get_options_parser'
+        bm.finalize_options()
+        bm.run()
+        install.run(self)
+
+
+try:
+    from build_manpage import build_manpage
+    cmdclass = {'install': PreInstallScript}
+except ImportError:
+    cmdclass = {}
+
 import sys
-from distutils.core import setup
 
-from setuptools import find_packages
-
-sys.path.insert(0, 'src/')
-from benchsuite.manpage_builder import build_manpage
 
 
 setup(
@@ -21,5 +39,5 @@ setup(
     author_email='gabriele.giammatteo@eng.it',
     description='',
     install_requires=['appdirs', 'prettytable', 'paramiko', 'apache-libcloud', 'benchsuite.core'],
-    cmdclass={'build_manpage': build_manpage}
+    cmdclass=cmdclass
 )
