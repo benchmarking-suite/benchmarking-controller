@@ -107,7 +107,6 @@ def execute_onestep_cmd(args):
 def get_options_parser():
     # create the top-level parser
     parser = argparse.ArgumentParser(prog='PROG')
-    parser.add_argument('--foo', action='store_true', help='foo help')
     parser.add_argument('--verbose', '-v', action='count', help='print more information (3 levels)')
     parser.add_argument('--config', '-c', type=str, help='foo help')
     subparsers = parser.add_subparsers(help='sub-command help')
