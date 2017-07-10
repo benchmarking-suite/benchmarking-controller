@@ -1,3 +1,4 @@
+import sys
 from subprocess import call
 from setuptools import setup, find_packages
 from setuptools.command.install import install
@@ -21,6 +22,7 @@ class CustomInstallCmd(install):
         self.distribution.cmdclass['build_manpage'] = build_manpage
 
         # run the command
+        sys.path.insert(0, 'src/')  # add src dir to the path so build_manpage can find the cli module
         self.run_command('build_manpage')
 
         # run the standard install command
@@ -30,7 +32,7 @@ class CustomInstallCmd(install):
 
 setup(
     name='benchsuite.controller',
-    version='2.0.0-dev29',
+    version='2.0.0-dev30',
     packages=find_packages('src'),
     namespace_packages=['benchsuite'],
     package_dir={'': 'src'},
