@@ -21,6 +21,7 @@
 import argparse
 import logging
 import sys
+import traceback
 from datetime import datetime
 
 from prettytable import PrettyTable
@@ -30,6 +31,8 @@ from benchsuite.controller import BenchmarkingController
 from benchsuite.core.model.exception import BashCommandExecutionFailedException
 
 RUNTIME_NOT_AVAILABLE_RETURN_CODE = 1
+
+logger = logging.getLogger(__name__)
 
 
 def list_executions_cmd(args):
@@ -103,76 +106,19 @@ def execute_onestep_cmd(args):
         print('============ STDERR ============')
         print(err)
 
-#
-#
-# def get_options_parser():
-#     # create the top-level parser
-#     parser = argparse.ArgumentParser(prog='PROG')
-#     parser.add_argument('--verbose', '-v', action='count', help='print more information (3 levels)')
-#     parser.add_argument('--config', '-c', type=str, help='foo help')
-#     subparsers = parser.add_subparsers(help='sub-command help')
-#
-#
-#     # create the parser for the "a" command
-#     # new-session --provider-conf [name] --service-type [name]
-#     parser_a = subparsers.add_parser('new-session', help='create-env help')
-#     parser_a.add_argument('--provider', type=str, help='bar help')
-#     parser_a.add_argument('--service-type', type=str, help='bar help')
-#     parser_a.set_defaults(func=new_session_cmd)
-#
-#     parser_a = subparsers.add_parser('list-sessions', help='a help')
-#     parser_a.set_defaults(func=list_sessions_cmd)
-#
-#     parser_a = subparsers.add_parser('destroy-session', help='a help')
-#     parser_a.add_argument('id', type=str, help='bar help')
-#     parser_a.set_defaults(func=destroy_session_cmd)
-#
-#     parser_a = subparsers.add_parser('new-exec', help='a help')
-#     parser_a.add_argument('session', type=str, help='bar help')
-#     parser_a.add_argument('tool', type=str, help='bar help')
-#     parser_a.add_argument('workload', type=str, help='bar help')
-#     parser_a.set_defaults(func=new_execution_cmd)
-#
-#     parser_a = subparsers.add_parser('prepare-exec', help='a help')
-#     parser_a.add_argument('id', type=str, help='bar help')
-#     parser_a.set_defaults(func=prepare_execution_cmd)
-#
-#     parser_a = subparsers.add_parser('run-exec', help='a help')
-#     parser_a.add_argument('id', type=str, help='bar help')
-#     parser_a.add_argument('--async', action='store_true', help='bar help')
-#     parser_a.set_defaults(func=run_execution_cmd)
-#
-#
-#     parser_a = subparsers.add_parser('list-execs', help='lists the executions')
-#     parser_a.set_defaults(func=list_executions_cmd)
-#
-#     parser_a = subparsers.add_parser('collect-exec', help='collects the outputs of an execution')
-#     parser_a.add_argument('id', type=str, help='the execution id')
-#     parser_a.set_defaults(func=collect_results_cmd)
-#
-#
-#     parser_a = subparsers.add_parser('exec', help='create-env help')
-#     parser_a.add_argument('--provider', type=str, help='bar help')
-#     parser_a.add_argument('--service-type', type=str, help='bar help')
-#     parser_a.add_argument('--tool', type=str, help='bar help')
-#     parser_a.add_argument('--workload', type=str, help='bar help')
-#     parser_a.set_defaults(func=execute_onestep_cmd)
-#
-#     return parser
-
 
 
 def main(args=None):
+
     cmds_mapping = {
-        'new_session_cmd': None,
+        'new_session_cmd': new_session_cmd,
         'list_sessions_cmd': list_sessions_cmd,
-        'destroy_session_cmd': None,
-        'destroy_session_cmd': None,
-        'new_execution_cmd': None,
-        'prepare_execution_cmd': None,
-        'run_execution_cmd': None,
-        'collect_results_cmd': None,
-        'execute_onestep_cmd': None,
+        'destroy_session_cmd': destroy_session_cmd,
+        'new_execution_cmd': new_execution_cmd,
+        'prepare_execution_cmd': prepare_execution_cmd,
+        'run_execution_cmd': run_execution_cmd,
+        'collect_results_cmd': collect_results_cmd,
+        'execute_onestep_cmd': execute_onestep_cmd,
         'list_executions_cmd': list_executions_cmd
     }
 
@@ -219,6 +165,13 @@ def main(args=None):
             text_file.write(e.stderr)
 
         print('Command stdout and stderr have been dumped to {0}'.format(error_file))
+        sys.exit(1)
+
+    except Exception as e:
+        print('ERROR!!! An exception occured: "{0}" (run with -v to see the stacktrace)'.format(str(e)))
+        if args.verbose > 0:
+            traceback.print_exc()
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

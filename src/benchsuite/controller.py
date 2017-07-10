@@ -74,6 +74,7 @@ class BenchmarkingController():
             else:
                 self.config_folder = os.environ[CONFIG_FOLDER_VARIABLE_NAME]
 
+        logger.info('Using config directory at ' + self.config_folder)
         self.configuration = ControllerConfiguration(self.config_folder)
         self.storage_folder = storage_dir or self.configuration.get_default_data_dir()
         self.session_storage = SessionStorageManager(self.storage_folder)

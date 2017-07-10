@@ -20,30 +20,28 @@
 import argparse
 
 
-def unbound_command():
-    pass
-
-def get_options_parser(cmds_mapping={
+DEFAULT_CMDS_MAPPING = {
     'new_session_cmd': None,
     'list_sessions_cmd': None,
-'destroy_session_cmd': None,
-'destroy_session_cmd': None,
-'new_execution_cmd': None,
-'prepare_execution_cmd': None,
-'run_execution_cmd': None,
-'collect_results_cmd': None,
-'execute_onestep_cmd': None,
-'list_executions_cmd': None
-}):
+    'destroy_session_cmd': None,
+    'new_execution_cmd': None,
+    'prepare_execution_cmd': None,
+    'run_execution_cmd': None,
+    'collect_results_cmd': None,
+    'execute_onestep_cmd': None,
+    'list_executions_cmd': None
+}
+
+
+def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
+
     # create the top-level parser
-    parser = argparse.ArgumentParser(prog='PROG')
+    parser = argparse.ArgumentParser(prog='benchsuite')
     parser.add_argument('--verbose', '-v', action='count', help='print more information (3 levels)')
     parser.add_argument('--config', '-c', type=str, help='foo help')
     subparsers = parser.add_subparsers(help='sub-command help')
 
 
-    # create the parser for the "a" command
-    # new-session --provider-conf [name] --service-type [name]
     parser_a = subparsers.add_parser('new-session', help='create-env help')
     parser_a.add_argument('--provider', type=str, help='bar help')
     parser_a.add_argument('--service-type', type=str, help='bar help')
@@ -78,7 +76,6 @@ def get_options_parser(cmds_mapping={
     parser_a = subparsers.add_parser('collect-exec', help='collects the outputs of an execution')
     parser_a.add_argument('id', type=str, help='the execution id')
     parser_a.set_defaults(func=cmds_mapping['collect_results_cmd'])
-
 
     parser_a = subparsers.add_parser('exec', help='Execute a single benchmark test on single provider in one-step '
                                                   'execution')
