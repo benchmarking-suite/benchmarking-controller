@@ -18,7 +18,6 @@
 # Developed in the ARTIST EU project (www.artist-project.eu) and in the
 # CloudPerfect EU project (https://cloudperfect.eu/)
 
-import argparse
 import logging
 import sys
 import traceback
@@ -26,8 +25,8 @@ from datetime import datetime
 
 from prettytable import PrettyTable
 
-from benchsuite.commands.argument_parser import get_options_parser
-from benchsuite.controller import BenchmarkingController
+from benchsuite.controller.controller import BenchmarkingController
+from benchsuite.controller.commands.argument_parser import get_options_parser
 from benchsuite.core.model.exception import BashCommandExecutionFailedException
 
 RUNTIME_NOT_AVAILABLE_RETURN_CODE = 1

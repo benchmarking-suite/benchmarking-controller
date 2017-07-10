@@ -17,15 +17,13 @@
 #
 # Developed in the ARTIST EU project (www.artist-project.eu) and in the
 # CloudPerfect EU project (https://cloudperfect.eu/)
-import os
-
 import logging
-
+import os
 import sys
 
 from benchsuite.controller import CONFIG_FOLDER_VARIABLE_NAME
+from benchsuite.controller.execution import VMSetExecutionEnvironmentRequest
 from benchsuite.core.model.provider import load_service_provider_from_config_file
-from benchsuite.execution.vm_environment import VMSetExecutionEnvironmentRequest, VM
 
 if __name__ == '__main__':
 

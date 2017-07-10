@@ -34,10 +34,10 @@ setup(
     name='benchsuite.controller',
     version='2.0.0-dev32',
     packages=find_packages('src'),
-    namespace_packages=['benchsuite'],
+    namespace_packages=['benchsuite', 'benchsuite.controller'],
     package_dir={'': 'src'},
     entry_points={
-        'console_scripts': ['benchsuite=benchsuite.commands.cli:main'],
+        'console_scripts': ['benchsuite=benchsuite.controller.commands.cli:main'],
     },
     url='https://github.com/benchmarking-suite/benchsuite-controller',
     license='',

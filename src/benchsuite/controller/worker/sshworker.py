@@ -21,10 +21,9 @@
 import logging
 import os
 
-from benchsuite.core.model.exception import BashCommandExecutionFailedException
-
+from benchsuite.controller.util import run_ssh_cmd
 from benchsuite.core.model.common import TestExecutor
-from benchsuite.util import run_ssh_cmd
+from benchsuite.core.model.exception import BashCommandExecutionFailedException
 
 logger = logging.getLogger(__name__)
 

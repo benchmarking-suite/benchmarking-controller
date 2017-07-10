@@ -22,13 +22,13 @@ import logging
 import time
 from configparser import ConfigParser
 
+from benchsuite.controller.util import run_ssh_cmd
 from libcloud.compute.drivers.ec2 import EC2NetworkSubnet
 from libcloud.compute.providers import get_driver
 
+from benchsuite.controller.execution.vm_environment import VMSetExecutionEnvironment, VM
 from benchsuite.core.model.execution import ExecutionEnvironmentRequest, ExecutionEnvironment
 from benchsuite.core.model.provider import ServiceProvider
-from benchsuite.execution.vm_environment import VMSetExecutionEnvironment, VM
-from benchsuite.util import run_ssh_cmd
 
 logger = logging.getLogger(__name__)
 

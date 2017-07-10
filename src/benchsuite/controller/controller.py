@@ -22,14 +22,14 @@ import logging
 import os
 
 from appdirs import user_data_dir
-from benchsuite.core.model.exception import ControllerConfigurationException, UndefinedExecutionException
-from benchsuite.core.model.provider import load_service_provider_from_config_file
-from benchsuite.core.model.session import BenchmarkingSession
 from typing import Dict
 
+from benchsuite.controller.persistence.session import SessionStorageManager
 from benchsuite.core.model.benchmark import load_benchmark_from_config_file
+from benchsuite.core.model.exception import ControllerConfigurationException, UndefinedExecutionException
 from benchsuite.core.model.execution import BenchmarkExecution
-from benchsuite.persistence.session import SessionStorageManager
+from benchsuite.core.model.provider import load_service_provider_from_config_file
+from benchsuite.core.model.session import BenchmarkingSession
 
 CONFIG_FOLDER_VARIABLE_NAME = 'BENCHSUITE_CONFIG_FOLDER'
 STORAGE_FOLDER_VARIABLE_NAME = 'BENCHSUITE_STORAGE_FOLDER'
