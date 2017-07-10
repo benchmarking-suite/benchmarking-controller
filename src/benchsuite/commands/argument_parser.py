@@ -47,44 +47,45 @@ def get_options_parser(cmds_mapping={
     parser_a = subparsers.add_parser('new-session', help='create-env help')
     parser_a.add_argument('--provider', type=str, help='bar help')
     parser_a.add_argument('--service-type', type=str, help='bar help')
-    parser_a.set_defaults(func= cmds['new_session_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['new_session_cmd'])
 
     parser_a = subparsers.add_parser('list-sessions', help='a help')
-    parser_a.set_defaults(func=cmds['list_sessions_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['list_sessions_cmd'])
 
     parser_a = subparsers.add_parser('destroy-session', help='a help')
     parser_a.add_argument('id', type=str, help='bar help')
-    parser_a.set_defaults(func=cmds['destroy_session_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['destroy_session_cmd'])
 
     parser_a = subparsers.add_parser('new-exec', help='a help')
     parser_a.add_argument('session', type=str, help='bar help')
     parser_a.add_argument('tool', type=str, help='bar help')
     parser_a.add_argument('workload', type=str, help='bar help')
-    parser_a.set_defaults(func=cmds['new_execution_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['new_execution_cmd'])
 
     parser_a = subparsers.add_parser('prepare-exec', help='a help')
     parser_a.add_argument('id', type=str, help='bar help')
-    parser_a.set_defaults(func=cmds['prepare_execution_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['prepare_execution_cmd'])
 
     parser_a = subparsers.add_parser('run-exec', help='a help')
     parser_a.add_argument('id', type=str, help='bar help')
     parser_a.add_argument('--async', action='store_true', help='bar help')
-    parser_a.set_defaults(func=cmds['run_execution_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['run_execution_cmd'])
 
 
     parser_a = subparsers.add_parser('list-execs', help='lists the executions')
-    parser_a.set_defaults(func=cmds['list_executions_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['list_executions_cmd'])
 
     parser_a = subparsers.add_parser('collect-exec', help='collects the outputs of an execution')
     parser_a.add_argument('id', type=str, help='the execution id')
-    parser_a.set_defaults(func=cmds['collect_results_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['collect_results_cmd'])
 
 
-    parser_a = subparsers.add_parser('exec', help='create-env help')
+    parser_a = subparsers.add_parser('exec', help='Execute a single benchmark test on single provider in one-step '
+                                                  'execution')
     parser_a.add_argument('--provider', type=str, help='bar help')
     parser_a.add_argument('--service-type', type=str, help='bar help')
     parser_a.add_argument('--tool', type=str, help='bar help')
     parser_a.add_argument('--workload', type=str, help='bar help')
-    parser_a.set_defaults(func=cmds['execute_onestep_cmd'])
+    parser_a.set_defaults(func=cmds_mapping['execute_onestep_cmd'])
 
     return parser

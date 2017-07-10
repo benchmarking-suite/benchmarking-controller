@@ -32,7 +32,7 @@ class CustomInstallCmd(install):
 
 setup(
     name='benchsuite.controller',
-    version='2.0.0-dev31',
+    version='2.0.0-dev32',
     packages=find_packages('src'),
     namespace_packages=['benchsuite'],
     package_dir={'': 'src'},
