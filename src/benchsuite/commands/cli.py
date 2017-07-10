@@ -160,13 +160,25 @@ def execute_onestep_cmd(args):
 #
 #     return parser
 
+
+
 def main():
+    cmds_mapping = {
+        'new_session_cmd': None,
+        'list_sessions_cmd': None,
+        'destroy_session_cmd': None,
+        'destroy_session_cmd': None,
+        'new_execution_cmd': None,
+        'prepare_execution_cmd': None,
+        'run_execution_cmd': None,
+        'collect_results_cmd': None,
+        'execute_onestep_cmd': None,
+        'list_executions_cmd': list_executions_cmd
+    }
 
-    parser = get_options_parser()
-
+    parser = get_options_parser(cmds_mapping=cmds_mapping)
 
     args = parser.parse_args(args = sys.argv[1:])
-
 
     if not args.verbose:
         args.verbose = 0

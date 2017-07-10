@@ -23,7 +23,7 @@ import argparse
 def unbound_command():
     pass
 
-def get_options_parser(cmds={
+def get_options_parser(cmds_mapping={
     'new_session_cmd': None,
     'list_sessions_cmd': None,
 'destroy_session_cmd': None,
