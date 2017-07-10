@@ -25,6 +25,7 @@ from datetime import datetime
 
 from prettytable import PrettyTable
 
+from benchsuite.commands.argument_parser import get_options_parser
 from benchsuite.controller import BenchmarkingController
 from benchsuite.core.model.exception import BashCommandExecutionFailedException
 
@@ -102,72 +103,69 @@ def execute_onestep_cmd(args):
         print('============ STDERR ============')
         print(err)
 
+#
+#
+# def get_options_parser():
+#     # create the top-level parser
+#     parser = argparse.ArgumentParser(prog='PROG')
+#     parser.add_argument('--verbose', '-v', action='count', help='print more information (3 levels)')
+#     parser.add_argument('--config', '-c', type=str, help='foo help')
+#     subparsers = parser.add_subparsers(help='sub-command help')
+#
+#
+#     # create the parser for the "a" command
+#     # new-session --provider-conf [name] --service-type [name]
+#     parser_a = subparsers.add_parser('new-session', help='create-env help')
+#     parser_a.add_argument('--provider', type=str, help='bar help')
+#     parser_a.add_argument('--service-type', type=str, help='bar help')
+#     parser_a.set_defaults(func=new_session_cmd)
+#
+#     parser_a = subparsers.add_parser('list-sessions', help='a help')
+#     parser_a.set_defaults(func=list_sessions_cmd)
+#
+#     parser_a = subparsers.add_parser('destroy-session', help='a help')
+#     parser_a.add_argument('id', type=str, help='bar help')
+#     parser_a.set_defaults(func=destroy_session_cmd)
+#
+#     parser_a = subparsers.add_parser('new-exec', help='a help')
+#     parser_a.add_argument('session', type=str, help='bar help')
+#     parser_a.add_argument('tool', type=str, help='bar help')
+#     parser_a.add_argument('workload', type=str, help='bar help')
+#     parser_a.set_defaults(func=new_execution_cmd)
+#
+#     parser_a = subparsers.add_parser('prepare-exec', help='a help')
+#     parser_a.add_argument('id', type=str, help='bar help')
+#     parser_a.set_defaults(func=prepare_execution_cmd)
+#
+#     parser_a = subparsers.add_parser('run-exec', help='a help')
+#     parser_a.add_argument('id', type=str, help='bar help')
+#     parser_a.add_argument('--async', action='store_true', help='bar help')
+#     parser_a.set_defaults(func=run_execution_cmd)
+#
+#
+#     parser_a = subparsers.add_parser('list-execs', help='lists the executions')
+#     parser_a.set_defaults(func=list_executions_cmd)
+#
+#     parser_a = subparsers.add_parser('collect-exec', help='collects the outputs of an execution')
+#     parser_a.add_argument('id', type=str, help='the execution id')
+#     parser_a.set_defaults(func=collect_results_cmd)
+#
+#
+#     parser_a = subparsers.add_parser('exec', help='create-env help')
+#     parser_a.add_argument('--provider', type=str, help='bar help')
+#     parser_a.add_argument('--service-type', type=str, help='bar help')
+#     parser_a.add_argument('--tool', type=str, help='bar help')
+#     parser_a.add_argument('--workload', type=str, help='bar help')
+#     parser_a.set_defaults(func=execute_onestep_cmd)
+#
+#     return parser
 
-
-def get_options_parser():
-    # create the top-level parser
-    parser = argparse.ArgumentParser(prog='PROG')
-    parser.add_argument('--verbose', '-v', action='count', help='print more information (3 levels)')
-    parser.add_argument('--config', '-c', type=str, help='foo help')
-    subparsers = parser.add_subparsers(help='sub-command help')
-
-
-    # create the parser for the "a" command
-    # new-session --provider-conf [name] --service-type [name]
-    parser_a = subparsers.add_parser('new-session', help='create-env help')
-    parser_a.add_argument('--provider', type=str, help='bar help')
-    parser_a.add_argument('--service-type', type=str, help='bar help')
-    parser_a.set_defaults(func=new_session_cmd)
-
-    parser_a = subparsers.add_parser('list-sessions', help='a help')
-    parser_a.set_defaults(func=list_sessions_cmd)
-
-    parser_a = subparsers.add_parser('destroy-session', help='a help')
-    parser_a.add_argument('id', type=str, help='bar help')
-    parser_a.set_defaults(func=destroy_session_cmd)
-
-    parser_a = subparsers.add_parser('new-exec', help='a help')
-    parser_a.add_argument('session', type=str, help='bar help')
-    parser_a.add_argument('tool', type=str, help='bar help')
-    parser_a.add_argument('workload', type=str, help='bar help')
-    parser_a.set_defaults(func=new_execution_cmd)
-
-    parser_a = subparsers.add_parser('prepare-exec', help='a help')
-    parser_a.add_argument('id', type=str, help='bar help')
-    parser_a.set_defaults(func=prepare_execution_cmd)
-
-    parser_a = subparsers.add_parser('run-exec', help='a help')
-    parser_a.add_argument('id', type=str, help='bar help')
-    parser_a.add_argument('--async', action='store_true', help='bar help')
-    parser_a.set_defaults(func=run_execution_cmd)
-
-
-    parser_a = subparsers.add_parser('list-execs', help='lists the executions')
-    parser_a.set_defaults(func=list_executions_cmd)
-
-    parser_a = subparsers.add_parser('collect-exec', help='collects the outputs of an execution')
-    parser_a.add_argument('id', type=str, help='the execution id')
-    parser_a.set_defaults(func=collect_results_cmd)
-
-
-    parser_a = subparsers.add_parser('exec', help='create-env help')
-    parser_a.add_argument('--provider', type=str, help='bar help')
-    parser_a.add_argument('--service-type', type=str, help='bar help')
-    parser_a.add_argument('--tool', type=str, help='bar help')
-    parser_a.add_argument('--workload', type=str, help='bar help')
-    parser_a.set_defaults(func=execute_onestep_cmd)
-
-    return parser
-
-def main(cmdline_args):
+def main():
 
     parser = get_options_parser()
 
 
-    print(parser.format_usage())
-    sys.exit()
-
-    args = parser.parse_args(cmdline_args)
+    args = parser.parse_args(args = sys.argv[1:])
 
 
     if not args.verbose:
