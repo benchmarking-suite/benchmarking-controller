@@ -1,32 +1,36 @@
 from subprocess import call
-
 from setuptools import setup, find_packages
 from setuptools.command.install import install
-from setuptools.command.bdist_egg import bdist_egg
 
-class PreInstallScript(install):
 
+
+class CustomInstallCmd(install):
+    """
+    Custom install command that before running the actual install command, download the argparse-manpage package and 
+    invoke it to build the manpage from the argparse parser of the cli.
+    """
     def run(self):
-        sys.path.insert(0, 'src/')
+
+        # download the needed package
         call(["pip install git+https://github.com/gabrielegiammatteo/build_manpage.git#egg=argparse-manpage"], shell=True)
 
+        # import
         from build_manpage import build_manpage
-        bm = build_manpage(self.distribution)
-        bm.output = 'benchsuite.1'
-        bm.parser = 'benchsuite.commands.argument_parser:get_options_parser'
-        bm.finalize_options()
-        bm.run()
+
+        # define it as command
+        self.distribution.cmdclass['build_manpage'] = build_manpage
+
+        # run the command
+        self.run_command('build_manpage')
+
+        # run the standard install command
         install.run(self)
-
-cmdclass = {'install': PreInstallScript}
-
-import sys
 
 
 
 setup(
     name='benchsuite.controller',
-    version='2.0.0-dev27',
+    version='2.0.0-dev29',
     packages=find_packages('src'),
     namespace_packages=['benchsuite'],
     package_dir={'': 'src'},
@@ -40,5 +44,5 @@ setup(
     author_email='gabriele.giammatteo@eng.it',
     description='',
     install_requires=['appdirs', 'prettytable', 'paramiko', 'apache-libcloud', 'benchsuite.core'],
-    cmdclass=cmdclass,
+    cmdclass={'install': CustomInstallCmd},
 )
