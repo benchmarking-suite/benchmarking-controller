@@ -25,8 +25,8 @@ from datetime import datetime
 
 from prettytable import PrettyTable
 
-from benchsuite.controller.controller import BenchmarkingController
-from benchsuite.controller.commands.argument_parser import get_options_parser
+from benchsuite.cli.argument_parser import get_options_parser
+from benchsuite.core.controller import BenchmarkingController
 from benchsuite.core.model.exception import BashCommandExecutionFailedException
 
 RUNTIME_NOT_AVAILABLE_RETURN_CODE = 1

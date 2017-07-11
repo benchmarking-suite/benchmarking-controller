@@ -41,10 +41,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser.add_argument('--config', '-c', type=str, help='foo help')
     subparsers = parser.add_subparsers(help='sub-command help')
 
-
     parser_a = subparsers.add_parser('new-session', help='create-env help')
-    parser_a.add_argument('--provider', type=str, help='bar help')
-    parser_a.add_argument('--service-type', type=str, help='bar help')
+    parser_a.add_argument('--provider', type=str, required=True, help='bar help')
+    parser_a.add_argument('--service-type', type=str, required=True, help='bar help')
     parser_a.set_defaults(func=cmds_mapping['new_session_cmd'])
 
     parser_a = subparsers.add_parser('list-sessions', help='a help')

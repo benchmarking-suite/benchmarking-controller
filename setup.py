@@ -37,9 +37,9 @@ setup(
     namespace_packages=['benchsuite'],
     package_dir={'': 'src'},
     entry_points={
-        'console_scripts': ['benchsuite=benchsuite.controller.commands.cli:main'],
+        'console_scripts': ['benchsuite=benchsuite.controller.command.cli:main'],
     },
-    url='https://github.com/benchmarking-suite/benchsuite-controller',
+    url='https://github.com/benchmarking-suite/benchsuite-cli',
     license='',
     author='Gabriele Giammatteo',
     data_files = [('man/man1', ['benchsuite.1'])],
