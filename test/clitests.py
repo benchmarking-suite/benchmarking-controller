@@ -20,8 +20,8 @@
 
 import os
 
-from benchsuite.controller.controller import CONFIG_FOLDER_VARIABLE_NAME
-from benchsuite.controller.commands import cli
+from benchsuite.cli import commands
+from benchsuite.core.controller import CONFIG_FOLDER_VARIABLE_NAME
 
 if __name__ == '__main__':
 
@@ -36,4 +36,4 @@ if __name__ == '__main__':
     # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
 
 
-   cli.main('-vvv list-sessions'.split())
+   commands.main('-vvv list-sessions'.split())
