@@ -1,5 +1,4 @@
 import sys
-from subprocess import call
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 
@@ -12,8 +11,7 @@ class CustomInstallCmd(install):
     """
     def run(self):
 
-        # download the needed package
-        call(["pip install git+https://github.com/gabrielegiammatteo/build_manpage.git#egg=argparse-manpage"], shell=True)
+        #call(["pip install git+https://github.com/gabrielegiammatteo/build_manpage.git#egg=argparse-manpage"], shell=True)
 
         # import
         from build_manpage import build_manpage
@@ -26,6 +24,9 @@ class CustomInstallCmd(install):
         self.run_command('build_manpage')
 
         # run the standard install command
+        # do not call do_egg_install() here because it would do an egg and not install the manpage
+        # TODO: create a script to install the manpage from the egg resource (if we want to use the
+        # standard do_egg_install() command
         install.run(self)
 
 
@@ -37,7 +38,7 @@ setup(
     namespace_packages=['benchsuite'],
     package_dir={'': 'src'},
     entry_points={
-        'console_scripts': ['benchsuite=benchsuite.cli.commands:main'],
+        'console_scripts': ['benchsuite=benchsuite.cli.command:main'],
     },
     url='https://github.com/benchmarking-suite/benchsuite-cli',
     license='',
@@ -47,4 +48,8 @@ setup(
     description='',
     install_requires=['prettytable', 'benchsuite.core'],
     cmdclass={'install': CustomInstallCmd},
+    dependency_links = [
+          'https://github.com/gabrielegiammatteo/build_manpage/zipball/master#egg=argparse-manpage-0.0.1'
+          ],
+    setup_requires = ['argparse-manpage==0.0.1']
 )
