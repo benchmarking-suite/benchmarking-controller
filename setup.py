@@ -31,20 +31,20 @@ class CustomInstallCmd(install):
 
 
 setup(
-    name='benchsuite.controller',
+    name='benchsuite.cli',
     version='2.0.0-dev32',
     packages=find_packages('src'),
     namespace_packages=['benchsuite'],
     package_dir={'': 'src'},
     entry_points={
-        'console_scripts': ['benchsuite=benchsuite.controller.commands.cli:main'],
+        'console_scripts': ['benchsuite=benchsuite.cli.commands:main'],
     },
-    url='https://github.com/benchmarking-suite/benchsuite-controller',
+    url='https://github.com/benchmarking-suite/benchsuite-cli',
     license='',
     author='Gabriele Giammatteo',
     data_files = [('man/man1', ['benchsuite.1'])],
     author_email='gabriele.giammatteo@eng.it',
     description='',
-    install_requires=['appdirs', 'prettytable', 'paramiko', 'apache-libcloud', 'benchsuite.core'],
+    install_requires=['prettytable', 'benchsuite.core'],
     cmdclass={'install': CustomInstallCmd},
 )
