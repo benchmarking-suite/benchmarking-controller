@@ -36,4 +36,4 @@ if __name__ == '__main__':
     # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
 
 
-   main('-vvv new-session --provider amazon --service-type ciao'.split())
+   main('-vvv prepare-exec 0b3275f6-6bcf-11e7-8e0a-742b62857160'.split())
