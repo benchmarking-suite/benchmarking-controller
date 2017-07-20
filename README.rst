@@ -1,3 +1,1 @@
-##############
-benchsuite-cli
-##############
+A command line interface for the Benchmarking Suite
