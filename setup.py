@@ -22,6 +22,9 @@ import sys
 from setuptools import setup, find_packages
 from setuptools.command.install import install
 
+# import the VERSION from the source code
+import sys
+sys.path.append('src/')
 from benchsuite.cli import VERSION
 
 
