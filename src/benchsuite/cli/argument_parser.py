@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# BenchmarkingSuite - Benchmarking Controller
+# Benchmarking Suite
 # Copyright 2014-2017 Engineering Ingegneria Informatica S.p.A.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +16,7 @@
 #
 # Developed in the ARTIST EU project (www.artist-project.eu) and in the
 # CloudPerfect EU project (https://cloudperfect.eu/)
+
 import argparse
 
 
@@ -38,6 +38,7 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     # create the top-level parser
     parser = argparse.ArgumentParser(prog='benchsuite')
     parser.add_argument('--verbose', '-v', action='count', help='print more information (3 levels)')
+    parser.add_argument('--quiet', '-q', action='store_true', help='suppress normal output')
     parser.add_argument('--config', '-c', type=str, help='foo help')
     subparsers = parser.add_subparsers(help='sub-command help')
 

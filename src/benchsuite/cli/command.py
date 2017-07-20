@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-# BenchmarkingSuite - Benchmarking Controller
+# Benchmarking Suite
 # Copyright 2014-2017 Engineering Ingegneria Informatica S.p.A.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -125,19 +124,28 @@ def main(args=None):
 
     args = parser.parse_args(args = args or sys.argv[1:])
 
-    if not args.verbose:
-        args.verbose = 0
 
-    logging_level = logging.ERROR
+    # default
+    logging_level = logging.INFO
     logging_format = '%(message)s'
 
-    bench_suite_loggers = logging.getLogger('benchsuite')
 
-    if args.verbose == 1:
-        logging_level = logging.INFO
-    if args.verbose > 1:
-        logging_level = logging.DEBUG
-        logging_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    if args.quiet:
+        logging_level = logging.ERROR
+        logging_format = '%(message)s'
+
+    if args.verbose:
+        if args.verbose == 1:
+            logging_level = logging.DEBUG
+            logging_format = '%(message)s'
+
+        if args.verbose > 1:
+            logging_level = logging.DEBUG
+            logging_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+
+
+    bench_suite_loggers = logging.getLogger('benchsuite')
 
     logging.basicConfig(
         level=logging.CRITICAL,
@@ -146,7 +154,7 @@ def main(args=None):
 
     bench_suite_loggers.setLevel(logging_level)
 
-    if args.verbose > 2:
+    if args.verbose  and args.verbose > 2:
         logging.root.setLevel(logging.DEBUG)
 
     try:
