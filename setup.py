@@ -23,8 +23,8 @@ from setuptools.command.install import install
 
 # import the VERSION from the source code
 import sys
-sys.path.append('src/')
-from benchsuite.cli import VERSION
+sys.path.append(os.getcwd() + '/src/benchsuite')
+from cli import VERSION
 
 
 class CustomInstallCmd(install):
