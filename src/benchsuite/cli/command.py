@@ -146,38 +146,57 @@ def main(args=None):
 
     args = parser.parse_args(args = args or sys.argv[1:])
 
+    # adjust logging to the console accordingly with the verbosity level requested
+    #
+    # FATAL
+    # CRITICAL
+    # ERROR
+    # WARNING
+    # INFO -v
+    # DEBUG -vv
+    # DEBUG (all modules) -vvv
 
-    # default
     logging_level = logging.WARNING
     logging_format = '%(message)s'
 
-
-    if args.quiet:
-        logging_level = logging.CRITICAL
-        logging_format = '%(message)s'
-
     if args.verbose:
         if args.verbose == 1:
+            logging_level = logging.INFO
+            logging_format = '%(message)s'
+
+        if args.verbose == 2:
             logging_level = logging.DEBUG
             logging_format = '%(message)s'
 
-        if args.verbose > 1:
+        if args.verbose > 2:
             logging_level = logging.DEBUG
             logging_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 
+    # if the user sets the --quiet flag, do not print logging messages. Only print() messages will appear on the screen
+    if args.quiet:
+        logging.basicConfig(stream=None)
 
-    bench_suite_loggers = logging.getLogger('benchsuite')
+    else:
 
-    logging.basicConfig(
-        level=logging.CRITICAL,
-        stream=sys.stdout,
-        format=logging_format)
+        # basic config for all loggers (included the ones from third-party libs)
+        logging.basicConfig(
+            level=logging.ERROR,
+            stream=sys.stdout,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-    bench_suite_loggers.setLevel(logging_level)
+        # logging from benchsuite modules
+        st = logging.StreamHandler(stream=sys.stdout)
+        st.setLevel(logging_level)
+        st.setFormatter(logging.Formatter(logging_format))
+        bench_suite_loggers = logging.getLogger('benchsuite')
+        bench_suite_loggers.addHandler(st)
+        bench_suite_loggers.setLevel(logging_level)
+        bench_suite_loggers.propagate = False
 
-    if args.verbose  and args.verbose > 2:
-        logging.root.setLevel(logging.DEBUG)
+        if args.verbose  and args.verbose > 2:
+            logging.root.setLevel(logging.DEBUG)
+
 
     try:
         args.func(args)
