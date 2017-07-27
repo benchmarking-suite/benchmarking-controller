@@ -35,4 +35,4 @@ if __name__ == '__main__':
     # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
 
 
-   main('-vvv run-exec dbb1c614-6c6f-11e7-a731-742b62857160'.split())
+   main('run-exec ed4c8a0e-721d-11e7-b0dd-742b62857160'.split())

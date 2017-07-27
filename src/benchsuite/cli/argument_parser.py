@@ -50,6 +50,12 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser_a = subparsers.add_parser('list-sessions', help='a help')
     parser_a.set_defaults(func=cmds_mapping['list_sessions_cmd'])
 
+    parser_a = subparsers.add_parser('list-providers', help='a help')
+    parser_a.set_defaults(func=cmds_mapping['list_providers_cmd'])
+
+    parser_a = subparsers.add_parser('list-benchmarks', help='a help')
+    parser_a.set_defaults(func=cmds_mapping['list_benchmarks_cmd'])
+
     parser_a = subparsers.add_parser('destroy-session', help='a help')
     parser_a.add_argument('id', type=str, help='bar help')
     parser_a.set_defaults(func=cmds_mapping['destroy_session_cmd'])

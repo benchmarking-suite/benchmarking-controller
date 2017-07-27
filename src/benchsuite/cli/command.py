@@ -33,6 +33,26 @@ RUNTIME_NOT_AVAILABLE_RETURN_CODE = 1
 logger = logging.getLogger(__name__)
 
 
+def list_benchmarks_cmd(args):
+    table = PrettyTable()
+    table.field_names = ["Tool", "Workloads"]
+    table.align = 'l'
+    with BenchmarkingController(args.config) as bc:
+        for p in bc.list_available_benchmarks():
+            table.add_row([p.name, '\n'.join(p.service_types)])
+    print(table.get_string())
+
+
+def list_providers_cmd(args):
+    table = PrettyTable()
+    table.field_names = ["Name", "Service Types"]
+    table.align = 'l'
+    with BenchmarkingController(args.config) as bc:
+        for p in bc.list_available_providers():
+            table.add_row([p.name, ', '.join(p.service_types)])
+    print(table.get_string())
+
+
 def list_executions_cmd(args):
 
     table = PrettyTable()
@@ -50,13 +70,13 @@ def list_executions_cmd(args):
 def list_sessions_cmd(args):
 
     table = PrettyTable()
-    table.field_names = ["Id", "Type", "Created"]
+    table.field_names = ["Id", "Provider", "Service Type", "Created"]
 
     with BenchmarkingController(args.config) as bc:
         sessions = bc.list_sessions()
         for s in sessions:
             created = datetime.fromtimestamp(s.created).strftime('%Y-%m-%d %H:%M:%S')
-            table.add_row([s.id, s.provider.type, created])
+            table.add_row([s.id, s.provider.name, s.provider.service_type, created])
 
         print(table.get_string())
 
@@ -117,7 +137,9 @@ def main(args=None):
         'run_execution_cmd': run_execution_cmd,
         'collect_results_cmd': collect_results_cmd,
         'execute_onestep_cmd': execute_onestep_cmd,
-        'list_executions_cmd': list_executions_cmd
+        'list_executions_cmd': list_executions_cmd,
+        'list_providers_cmd': list_providers_cmd,
+        'list_benchmarks_cmd': list_benchmarks_cmd
     }
 
     parser = get_options_parser(cmds_mapping=cmds_mapping)
@@ -126,12 +148,12 @@ def main(args=None):
 
 
     # default
-    logging_level = logging.INFO
+    logging_level = logging.WARNING
     logging_format = '%(message)s'
 
 
     if args.quiet:
-        logging_level = logging.ERROR
+        logging_level = logging.CRITICAL
         logging_format = '%(message)s'
 
     if args.verbose:
@@ -176,7 +198,7 @@ def main(args=None):
 
     except Exception as e:
         print('ERROR!!! An exception occured: "{0}" (run with -v to see the stacktrace)'.format(str(e)))
-        if args.verbose > 0:
+        if args.verbose and args.verbose > 0:
             traceback.print_exc()
 
 
