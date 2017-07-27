@@ -29,7 +29,9 @@ DEFAULT_CMDS_MAPPING = {
     'run_execution_cmd': None,
     'collect_results_cmd': None,
     'execute_onestep_cmd': None,
-    'list_executions_cmd': None
+    'list_executions_cmd': None,
+    'list_providers_cmd': None,
+    'list_benchmarks_cmd': None
 }
 
 
