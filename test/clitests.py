@@ -35,4 +35,4 @@ if __name__ == '__main__':
     # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
 
 
-   main('-v new-session --provider filab-vicenza --service centos_medium'.split())
+   main('-vvv multiexec -p filab-vicenza -s ubuntu_large dacapo'.split())

@@ -28,7 +28,7 @@ DEFAULT_CMDS_MAPPING = {
     'prepare_execution_cmd': None,
     'run_execution_cmd': None,
     'collect_results_cmd': None,
-    'execute_onestep_cmd': None,
+    'multiexec_cmd': None,
     'list_executions_cmd': None,
     'list_providers_cmd': None,
     'list_benchmarks_cmd': None
@@ -44,10 +44,15 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser.add_argument('--config', '-c', type=str, help='foo help')
     subparsers = parser.add_subparsers(help='sub-command help')
 
-    parser_a = subparsers.add_parser('new-session', help='create-env help')
-    parser_a.add_argument('--provider', type=str, required=True, help='bar help')
-    parser_a.add_argument('--service-type', type=str, required=True, help='bar help')
-    parser_a.set_defaults(func=cmds_mapping['new_session_cmd'])
+    sub_parser = subparsers.add_parser('new-session', help='create-env help')
+    sub_parser.add_argument('--provider', '-p', type=str, required=True,
+                            help='The name for the service provider configuration or the filepath of the provider '
+                                 'configuration file')
+
+    sub_parser.add_argument('--service-type', '-s', type=str, required=True,
+                            help='The name of one of the service types defined in the provider configuration')
+
+    sub_parser.set_defaults(func=cmds_mapping['new_session_cmd'])
 
     parser_a = subparsers.add_parser('list-sessions', help='a help')
     parser_a.set_defaults(func=cmds_mapping['list_sessions_cmd'])
@@ -85,12 +90,27 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser_a.add_argument('id', type=str, help='the execution id')
     parser_a.set_defaults(func=cmds_mapping['collect_results_cmd'])
 
-    parser_a = subparsers.add_parser('exec', help='Execute a single benchmark test on single provider in one-step '
-                                                  'execution')
-    parser_a.add_argument('--provider', type=str, help='bar help')
-    parser_a.add_argument('--service-type', type=str, help='bar help')
-    parser_a.add_argument('--tool', type=str, help='bar help')
-    parser_a.add_argument('--workload', type=str, help='bar help')
-    parser_a.set_defaults(func=cmds_mapping['execute_onestep_cmd'])
+    #
+    # MULTIEXEC
+    #
+
+    sub_parser = subparsers.add_parser('multiexec',
+                                       help='Execute multiple tests in a single benchmarking session',
+                                       epilog='Example: benchsuite multiexec -p myamazon -s centos_tiny cfd:workload1 '
+                                              'ycsb:workloada ycsb:workloadb')
+
+    sub_parser.add_argument('--provider', '-p', type=str, required=True,
+                            help='The name for the service provider configuration or the filepath of the provider '
+                                 'configuration file')
+
+    sub_parser.add_argument('--service-type', '-s', type=str,
+                            help='The name of one of the service types defined in the provider configuration. If not '
+                                 'specified, all service types will be used')
+
+    sub_parser.add_argument('tests', nargs='+',
+                            help='one or more tests in the format <tool>[:<workload>]. If workload is omitted, all '
+                                 '  workloads defined for that tool will be executed')
+
+    sub_parser.set_defaults(func=cmds_mapping['multiexec_cmd'])
 
     return parser

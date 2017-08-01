@@ -39,7 +39,7 @@ def list_benchmarks_cmd(args):
     table.align = 'l'
     with BenchmarkingController(args.config) as bc:
         for p in bc.list_available_benchmarks():
-            table.add_row([p.name, '\n'.join(p.service_types)])
+            table.add_row([p.name, '\n'.join(p.workloads)])
     print(table.get_string())
 
 
@@ -116,13 +116,20 @@ def run_execution_cmd(args):
         bc.run_execution(args.id, async=args.async)
 
 
-def execute_onestep_cmd(args):
+def multiexec_cmd(args):
+
+    # parse the tests to execute
+    tuples = []
+    for s in args.tests:
+        t = s.split(':', maxsplit=1)
+        if len(t) == 1:
+            tuples.append((t[0], None))
+        else:
+            tuples.append((t[0], t[1]))
+
+
     with BenchmarkingController() as bc:
-        out, err = bc.execute_onestep(args.provider, args.service_type, args.tool, args.workload)
-        print('============ STDOUT ============')
-        print(out)
-        print('============ STDERR ============')
-        print(err)
+        bc.execute_onestep(args.provider, args.service_type, tuples)
 
 
 
@@ -136,7 +143,7 @@ def main(args=None):
         'prepare_execution_cmd': prepare_execution_cmd,
         'run_execution_cmd': run_execution_cmd,
         'collect_results_cmd': collect_results_cmd,
-        'execute_onestep_cmd': execute_onestep_cmd,
+        'multiexec_cmd': multiexec_cmd,
         'list_executions_cmd': list_executions_cmd,
         'list_providers_cmd': list_providers_cmd,
         'list_benchmarks_cmd': list_benchmarks_cmd
@@ -199,6 +206,11 @@ def main(args=None):
 
 
     try:
+
+        if not hasattr(args, 'func'):
+            print('A command must be specified. Run with --help  to check the different options')
+            sys.exit(1)
+
         args.func(args)
     except BashCommandExecutionFailedException as e:
         print(str(e))
