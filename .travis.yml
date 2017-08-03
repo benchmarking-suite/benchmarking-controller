@@ -8,4 +8,4 @@ script:
 
 
 after_success:
-  - curl --data '{"docker_tag": "dev"}' -X POST https://cloud.docker.com/api/build/v1/source/e262c94f-53d2-46b1-87f0-cfc601d7c093/trigger/979387fb-5206-4ff9-8570-dda47777498e/call/
+  - "curl --data '{\"docker_tag\": \"dev\"}' -X POST https://cloud.docker.com/api/build/v1/source/e262c94f-53d2-46b1-87f0-cfc601d7c093/trigger/979387fb-5206-4ff9-8570-dda47777498e/call/"
