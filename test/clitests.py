@@ -32,7 +32,8 @@ if __name__ == '__main__':
 
    # cli.main('-vvv exec --provider amazon-us-west-1 --service ubuntu_micro --tool ycsb-mongodb --workload WorkloadA'.split())
 
-    # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
+   # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
 
+   #main('-vvv new-exec 9ca3b4ce-f652-4faf-8e48-267f3f4c1460 filebench varmail_short'.split())
 
-   main('-vvv multiexec -p filab-vicenza -s ubuntu_large dacapo'.split())
+   main('-vvv run-exec 1516f866-88d6-11e7-9f96-742b62857160'.split())

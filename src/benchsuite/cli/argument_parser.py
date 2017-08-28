@@ -44,15 +44,66 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser.add_argument('--config', '-c', type=str, help='foo help')
     subparsers = parser.add_subparsers(help='sub-command help')
 
-    sub_parser = subparsers.add_parser('new-session', help='create-env help')
+
+    #
+    # NEW SESSION
+    #
+
+    sub_parser = subparsers.add_parser('new-session',
+                                       help='Creates a new benchmarking session',
+                                       epilog='Example: benchsuite new-session -p myamazon -s centos_tiny')
+
     sub_parser.add_argument('--provider', '-p', type=str, required=True,
                             help='The name for the service provider configuration or the filepath of the provider '
                                  'configuration file')
 
-    sub_parser.add_argument('--service-type', '-s', type=str, required=True,
+    sub_parser.add_argument('--service-type', '-s', type=str,
                             help='The name of one of the service types defined in the provider configuration')
 
+
     sub_parser.set_defaults(func=cmds_mapping['new_session_cmd'])
+
+
+
+    #
+    # NEW EXECUTION
+    #
+
+    sub_parser = subparsers.add_parser('new-exec',
+                                     help='Creates a new execution',
+                                     epilog='Example: benchsuite new-exec 73cff747-d31a-488c-98f5-a70b9a77a11f '
+                                            'filebench varmail')
+
+    sub_parser.add_argument('session', type=str, help='a valid session id')
+    sub_parser.add_argument('tool', type=str, help='a valid benchmarking tool')
+    sub_parser.add_argument('workload', type=str, help='a valid benchmarking tool workload')
+    sub_parser.set_defaults(func=cmds_mapping['new_execution_cmd'])
+
+
+
+    #
+    # PREPARE EXEC
+    #
+
+    sub_parser = subparsers.add_parser('prepare-exec',
+                                       help='Executes the install scripts for an execution',
+                                       epilog='Example: benchsuite prepare-exec 4a5a86d4-88b6-11e7-9f96-742b62857160')
+    sub_parser.add_argument('id', type=str, help='a valid id of the execution')
+    sub_parser.set_defaults(func=cmds_mapping['prepare_execution_cmd'])
+
+
+    #
+    # RUN EXEC
+    #
+
+    sub_parser = subparsers.add_parser('run-exec',  help='Executes the execute scripts for an execution',
+                                       epilog='Example: benchsuite run-exec 4a5a86d4-88b6-11e7-9f96-742b62857160')
+
+    sub_parser.add_argument('id', type=str, help='a valid id of the execution')
+    sub_parser.add_argument('--async', action='store_true', help='start the execution of the scripts and return (do not'
+                                                                 ' wait for the execution to finish)')
+    sub_parser.set_defaults(func=cmds_mapping['run_execution_cmd'])
+
 
     parser_a = subparsers.add_parser('list-sessions', help='a help')
     parser_a.set_defaults(func=cmds_mapping['list_sessions_cmd'])
@@ -67,20 +118,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser_a.add_argument('id', type=str, help='bar help')
     parser_a.set_defaults(func=cmds_mapping['destroy_session_cmd'])
 
-    parser_a = subparsers.add_parser('new-exec', help='a help')
-    parser_a.add_argument('session', type=str, help='bar help')
-    parser_a.add_argument('tool', type=str, help='bar help')
-    parser_a.add_argument('workload', type=str, help='bar help')
-    parser_a.set_defaults(func=cmds_mapping['new_execution_cmd'])
 
-    parser_a = subparsers.add_parser('prepare-exec', help='a help')
-    parser_a.add_argument('id', type=str, help='bar help')
-    parser_a.set_defaults(func=cmds_mapping['prepare_execution_cmd'])
 
-    parser_a = subparsers.add_parser('run-exec', help='a help')
-    parser_a.add_argument('id', type=str, help='bar help')
-    parser_a.add_argument('--async', action='store_true', help='bar help')
-    parser_a.set_defaults(func=cmds_mapping['run_execution_cmd'])
+
 
 
     parser_a = subparsers.add_parser('list-execs', help='lists the executions')
@@ -89,6 +129,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser_a = subparsers.add_parser('collect-exec', help='collects the outputs of an execution')
     parser_a.add_argument('id', type=str, help='the execution id')
     parser_a.set_defaults(func=cmds_mapping['collect_results_cmd'])
+
+
+
 
     #
     # MULTIEXEC
