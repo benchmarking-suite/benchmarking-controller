@@ -38,10 +38,9 @@ def list_benchmarks_cmd(args):
     table.field_names = ["Tool", "Workloads"]
     table.align = 'l'
     with BenchmarkingController(args.config) as bc:
-        for p in bc.list_available_benchmarks():
-            table.add_row([p.name, '\n'.join(p.workloads)])
+        for p in bc.list_available_benchmark_cfgs():
+            table.add_row([p.tool_name, [n['id'] for n in p.workloads]])
     print(table.get_string())
-
 
 def list_providers_cmd(args):
     table = PrettyTable()
