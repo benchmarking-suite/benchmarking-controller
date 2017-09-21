@@ -53,7 +53,7 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
                                        help='Creates a new benchmarking session',
                                        epilog='Example: benchsuite new-session -p myamazon -s centos_tiny')
 
-    sub_parser.add_argument('--provider', '-p', type=str, required=True,
+    sub_parser.add_argument('--provider', '-p', type=str,
                             help='The name for the service provider configuration or the filepath of the provider '
                                  'configuration file')
 
