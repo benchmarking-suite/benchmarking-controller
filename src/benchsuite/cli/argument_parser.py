@@ -142,7 +142,7 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
                                        epilog='Example: benchsuite multiexec -p myamazon -s centos_tiny cfd:workload1 '
                                               'ycsb:workloada ycsb:workloadb')
 
-    sub_parser.add_argument('--provider', '-p', type=str, required=True,
+    sub_parser.add_argument('--provider', '-p', type=str,
                             help='The name for the service provider configuration or the filepath of the provider '
                                  'configuration file')
 
