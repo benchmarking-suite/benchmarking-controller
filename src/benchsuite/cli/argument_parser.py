@@ -19,6 +19,7 @@
 
 import argparse
 
+from benchsuite.core.controller import PROVIDER_STRING_ENV_VAR_NAME
 
 DEFAULT_CMDS_MAPPING = {
     'new_session_cmd': None,
@@ -55,7 +56,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
 
     sub_parser.add_argument('--provider', '-p', type=str,
                             help='The name for the service provider configuration or the filepath of the provider '
-                                 'configuration file')
+                                 'configuration file. Alternatively, the provider configuration can be specified in the'
+                                 'environment variable {0} (the content of the variable must be the configuration, not '
+                                 'the filepath'.format(PROVIDER_STRING_ENV_VAR_NAME))
 
     sub_parser.add_argument('--service-type', '-s', type=str,
                             help='The name of one of the service types defined in the provider configuration')
