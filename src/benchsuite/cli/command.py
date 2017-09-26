@@ -172,7 +172,7 @@ def main(args=None):
 
         if args.verbose == 2:
             logging_level = logging.DEBUG
-            logging_format = '%(message)s'
+            logging_format = '%(levelname)s: %(message)s'
 
         if args.verbose > 2:
             logging_level = logging.DEBUG
@@ -212,18 +212,6 @@ def main(args=None):
 
         args.func(args)
     except BashCommandExecutionFailedException as e:
-        print(str(e))
-        error_file = 'last_cmd_error.dump'
-        with open(error_file, "w") as text_file:
-            text_file.write("========== CMD ==========\n")
-            text_file.write(e.cmd)
-            text_file.write('\n\n>>> Exit status was {0}\n'.format(e.exit_status))
-            text_file.write("\n\n========== STDOUT ==========\n")
-            text_file.write(e.stdout)
-            text_file.write("\n\n========== STDERR ==========\n")
-            text_file.write(e.stderr)
-
-        print('Command stdout and stderr have been dumped to {0}'.format(error_file))
         sys.exit(1)
 
     except Exception as e:
