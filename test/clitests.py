@@ -34,15 +34,16 @@ if __name__ == '__main__':
 
    os.environ['BENCHSUITE_PROVIDER'] = t
 
-   main('-vvv new-session'.split())
+   main('shell'.split())
+   #main('-vvv multiexec --provider amazon-us-west-1 filebench'.split())
 
-   #main('-vvv new-exec 14ebff2b-3934-4925-af65-fb46beef0cad idle idle30'.split())
+   #main('-vvv new-exec 1cbf3f39-c05a-4bf8-becc-42bc192dc71c idle idle30'.split())
 
    #main('-vvv list-execs'.split())
 
    # cli.main('-vvv exec --provider amazon-us-west-1 --service ubuntu_micro --tool ycsb-mongodb --workload WorkloadA'.split())
 
-   # cli.main('run-exec aaa76e0a-5d7b-11e7-8a4f-9c4e36dc7538'.split())
+   #main('prepare-exec 3e5c2c78-a36b-11e7-a0e8-742b62857160'.split())
 
    #main('-vvv new-exec 9ca3b4ce-f652-4faf-8e48-267f3f4c1460 filebench varmail_short'.split())
 

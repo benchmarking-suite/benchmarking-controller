@@ -25,13 +25,17 @@ from datetime import datetime
 from prettytable import PrettyTable
 
 from benchsuite.cli.argument_parser import get_options_parser
+from benchsuite.cli.shell import BenchsuiteShell
 from benchsuite.core.controller import BenchmarkingController
-from benchsuite.core.model.exception import BashCommandExecutionFailedException
+from benchsuite.core.model.exception import BashCommandExecutionFailedException, BaseBenchmarkingSuiteException
 
 RUNTIME_NOT_AVAILABLE_RETURN_CODE = 1
 
 logger = logging.getLogger(__name__)
 
+
+class CliParsingException(BaseBenchmarkingSuiteException):
+    pass
 
 def list_benchmarks_cmd(args):
     table = PrettyTable()
@@ -69,13 +73,14 @@ def list_executions_cmd(args):
 def list_sessions_cmd(args):
 
     table = PrettyTable()
-    table.field_names = ["Id", "Provider", "Service Type", "Created"]
+    table.field_names = ["Id", "Provider", "Service Type", "Created", "Properties"]
 
     with BenchmarkingController(args.config) as bc:
         sessions = bc.list_sessions()
         for s in sessions:
             created = datetime.fromtimestamp(s.created).strftime('%Y-%m-%d %H:%M:%S')
-            table.add_row([s.id, s.provider.name, s.provider.service_type, created])
+            props = "; ".join(["{0}={1}".format(k,v) for k,v in s.props.items()]) if hasattr(s, 'props') else ""
+            table.add_row([s.id, s.provider.name, s.provider.service_type, created, props])
 
         print(table.get_string())
 
@@ -88,9 +93,24 @@ def destroy_session_cmd(args):
 
 def new_session_cmd(args):
     with BenchmarkingController(args.config) as bc:
-        e = bc.new_session(args.provider, args.service_type)
-        print(e.id)
 
+        props = {}
+
+        for i in args.property or []:
+            v = i.split("=")
+            if len(v) != 2:
+                raise CliParsingException('Cannot parse property "{0}". '
+                                          'The property must be in the format <name>=<value>'.format(i))
+            props[v[0]] = v[1]
+
+        if args.user:
+            props['user'] = args.user
+
+        if args.tag:
+            props['tags'] = args.tag
+
+        e = bc.new_session(args.provider, args.service_type, properties = props)
+        print(e.id)
 
 def new_execution_cmd(args):
     with BenchmarkingController(args.config) as bc:
@@ -126,27 +146,33 @@ def multiexec_cmd(args):
         else:
             tuples.append((t[0], t[1]))
 
-
     with BenchmarkingController() as bc:
         bc.execute_onestep(args.provider, args.service_type, tuples)
 
 
+def start_shell_cmd(args):
+    BenchsuiteShell().cmdloop()
+
+
+
+cmds_mapping = {
+    'new_session_cmd': new_session_cmd,
+    'list_sessions_cmd': list_sessions_cmd,
+    'destroy_session_cmd': destroy_session_cmd,
+    'new_execution_cmd': new_execution_cmd,
+    'prepare_execution_cmd': prepare_execution_cmd,
+    'run_execution_cmd': run_execution_cmd,
+    'collect_results_cmd': collect_results_cmd,
+    'multiexec_cmd': multiexec_cmd,
+    'list_executions_cmd': list_executions_cmd,
+    'list_providers_cmd': list_providers_cmd,
+    'list_benchmarks_cmd': list_benchmarks_cmd,
+    'start_shell_cmd': start_shell_cmd
+}
+
+
 
 def main(args=None):
-
-    cmds_mapping = {
-        'new_session_cmd': new_session_cmd,
-        'list_sessions_cmd': list_sessions_cmd,
-        'destroy_session_cmd': destroy_session_cmd,
-        'new_execution_cmd': new_execution_cmd,
-        'prepare_execution_cmd': prepare_execution_cmd,
-        'run_execution_cmd': run_execution_cmd,
-        'collect_results_cmd': collect_results_cmd,
-        'multiexec_cmd': multiexec_cmd,
-        'list_executions_cmd': list_executions_cmd,
-        'list_providers_cmd': list_providers_cmd,
-        'list_benchmarks_cmd': list_benchmarks_cmd
-    }
 
     parser = get_options_parser(cmds_mapping=cmds_mapping)
 
@@ -208,16 +234,19 @@ def main(args=None):
 
         if not hasattr(args, 'func'):
             print('A command must be specified. Run with --help  to check the different options')
-            sys.exit(1)
+            return 10
 
-        args.func(args)
+        return args.func(args) or 0
+
+
     except BashCommandExecutionFailedException as e:
-        sys.exit(1)
+        return 1
 
     except Exception as e:
         print('ERROR!!! An exception occured: "{0}" (run with -v to see the stacktrace)'.format(str(e)))
         if args.verbose and args.verbose > 0:
             traceback.print_exc()
+        return 100
 
 
 if __name__ == '__main__':

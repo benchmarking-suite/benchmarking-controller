@@ -32,7 +32,8 @@ DEFAULT_CMDS_MAPPING = {
     'multiexec_cmd': None,
     'list_executions_cmd': None,
     'list_providers_cmd': None,
-    'list_benchmarks_cmd': None
+    'list_benchmarks_cmd': None,
+    'start_shell_cmd': None
 }
 
 
@@ -44,6 +45,13 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser.add_argument('--quiet', '-q', action='store_true', help='suppress normal output')
     parser.add_argument('--config', '-c', type=str, help='foo help')
     subparsers = parser.add_subparsers(help='sub-command help')
+
+    #
+    # SHELL
+    #
+    sub_parser = subparsers.add_parser('shell',
+                                       help="Starts an interactive shell")
+    sub_parser.set_defaults(func=cmds_mapping['start_shell_cmd'])
 
 
     #
@@ -60,10 +68,20 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
                                  'the environment variable {0} (the content of the variable must be the actual '
                                  'configuration not the filepath)'.format(PROVIDER_STRING_ENV_VAR_NAME))
 
-    sub_parser.add_argument('--service-type', '-s', type=str,
+    sub_parser.add_argument('--service-type', '-s',
                             help='The name of one of the service types defined in the provider configuration. '
                                  'Alternatively, it can be specified in the {0} environment '
                                  'varaible'.format(SERVICE_TYPE_STRING_ENV_VAR_NAME))
+
+    sub_parser.add_argument('--property', '-P', type=str, action='append',
+                            help='Add a user defined property to the session. The property must be expressed in the '
+                                 'format <name>=<value>')
+
+    sub_parser.add_argument('--user', '-u', type=str,
+                            help='sets the "user" property. It is a shortcut for "--property user=<name>')
+
+    sub_parser.add_argument('--tag', '-t', type=str, action='append',
+                            help='sets one or more session tags. Internally, tags are stored as properties')
 
 
     sub_parser.set_defaults(func=cmds_mapping['new_session_cmd'])
