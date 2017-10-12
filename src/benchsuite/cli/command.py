@@ -65,7 +65,7 @@ def list_executions_cmd(args):
         execs = bc.list_executions()
         for e in execs:
             created = datetime.fromtimestamp(e.created).strftime('%Y-%m-%d %H:%M:%S')
-            table.add_row([e.id, e.test.name, created, e.exec_env, e.session.id])
+            table.add_row([e.id, e.test.tool_name+'/'+e.test.workload_name, created, e.exec_env, e.session.id])
 
     print(table.get_string())
 
@@ -208,27 +208,28 @@ def main(args=None):
     # if the user sets the --quiet flag, do not print logging messages. Only print() messages will appear on the screen
     if args.quiet:
         logging.basicConfig(stream=None)
-
     else:
-
         # basic config for all loggers (included the ones from third-party libs)
         logging.basicConfig(
             level=logging.ERROR,
             stream=sys.stdout,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+
         # logging from benchsuite modules
         st = logging.StreamHandler(stream=sys.stdout)
         st.setLevel(logging_level)
         st.setFormatter(logging.Formatter(logging_format))
         bench_suite_loggers = logging.getLogger('benchsuite')
+        bench_suite_loggers.handlers = []
         bench_suite_loggers.addHandler(st)
         bench_suite_loggers.setLevel(logging_level)
         bench_suite_loggers.propagate = False
 
-        if args.verbose  and args.verbose > 2:
+        if args.verbose and args.verbose > 2:
+            logging.root.handlers = []
+            logging.root.addHandler(st)
             logging.root.setLevel(logging.DEBUG)
-
 
     try:
 

@@ -21,6 +21,36 @@ import cmd
 import sys
 from io import TextIOWrapper, BytesIO
 
+import re
+
+_uuidre = re.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.MULTILINE)
+
+# solution from : http://www.tentech.ca/2011/05/stream-tee-in-python-saving-stdout-to-file-while-keeping-the-console-alive/
+
+class stream_tee(object):
+    # Based on https://gist.github.com/327585 by Anand Kunal
+    def __init__(self, stream1, stream2):
+        self.stream1 = stream1
+        self.stream2 = stream2
+        self.__missing_method_name = None  # Hack!
+
+    def __getattribute__(self, name):
+        return object.__getattribute__(self, name)
+
+    def __getattr__(self, name):
+        self.__missing_method_name = name  # Could also be a property
+        return getattr(self, '__methodmissing__')
+
+    def __methodmissing__(self, *args, **kwargs):
+        # Emit method call to the log copy
+        callable2 = getattr(self.stream2, self.__missing_method_name)
+        callable2(*args, **kwargs)
+
+        # Emit method call to stdout (stream 1)
+        callable1 = getattr(self.stream1, self.__missing_method_name)
+        return callable1(*args, **kwargs)
+
+
 #
 # In order to not re-implement all the commands and option parsers, we are re-using here the commands functions and
 # parsers already defined in command.py amd argument_parser.py.
@@ -41,6 +71,10 @@ class BenchsuiteShell(cmd.Cmd):
 
 
     def precmd(self, line):
+
+        if not line:
+            return line
+
         # replace "-" in the command name with "_"
         tokens = line.split(maxsplit=1)
         tokens[0] = tokens[0].replace('-', '_')
@@ -70,8 +104,10 @@ class BenchsuiteShell(cmd.Cmd):
         retcode, out = self.__call_cmdline('new-session', line)
 
         if retcode == 0:
-            print('last_session='+out.strip())
-            self.last_session = out.strip()
+            uuid = self.__extract_uuid_from_output(out)
+            if uuid:
+                print('last_session='+uuid)
+                self.last_session = uuid
         else:
             print('Command failed.')
 
@@ -82,8 +118,11 @@ class BenchsuiteShell(cmd.Cmd):
         retcode, out = self.__call_cmdline('new-exec', line)
 
         if retcode == 0:
-            print('last_execution='+out.strip())
-            self.last_execution = out.strip()
+            uuid = self.__extract_uuid_from_output(out)
+            if uuid:
+                print('last_execution='+uuid)
+                self.last_execution = uuid
+
         else:
             print('Command failed.')
 
@@ -105,6 +144,18 @@ class BenchsuiteShell(cmd.Cmd):
     def do_EOF(self, line):
         return True
 
+    def __extract_uuid_from_output(self, output):
+        result = _uuidre.findall(output)
+
+        if not result:
+            print('ERROR: no uuid found in the output')
+            return
+
+        if len(result) > 1:
+            print("WARN: multiple uuid found in the output. Taking the last one")
+
+        return result[-1]
+
 
     def __call_cmdline(self, command, options):
         # redirect solution comes from https://stackoverflow.com/questions/1218933/can-i-redirect-the-stdout-in-pytho
@@ -112,16 +163,21 @@ class BenchsuiteShell(cmd.Cmd):
 
         cmd = ' '.join([self.debug_option, command, options])
         print('Executing: ' + cmd)
+
+        duplicated_stdout = TextIOWrapper(BytesIO(), sys.stdout.encoding)
+
         old_stdout = sys.stdout
-        sys.stdout = TextIOWrapper(BytesIO(), sys.stdout.encoding)
+
+        sys.stdout = stream_tee(sys.stdout, duplicated_stdout)
 
         from benchsuite.cli.command import main
         retcode = main(cmd.split())
 
-        sys.stdout.seek(0)
-        out = sys.stdout.read()
-        sys.stdout.close()
+        duplicated_stdout.seek(0)
+        out = duplicated_stdout.read()
+        duplicated_stdout.close()
         sys.stdout = old_stdout
+
         print(out)
 
         return retcode, out

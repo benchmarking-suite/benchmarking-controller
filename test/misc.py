@@ -20,23 +20,30 @@ import logging
 import os
 import sys
 
-from benchsuite.cli import CONFIG_FOLDER_VARIABLE_NAME
-from benchsuite.cli.execution import VMSetExecutionEnvironmentRequest
 from benchsuite.core.model.provider import load_service_provider_from_config_file
+
+
+OUTPUT = """
+2017-10-11 09:30:00,645 - benchsuite.core.sessionmanager - DEBUG - Benchmarking Sessions loaded from /home/ggiammat/.local/share/benchmarking-suite/sessions.dat (60 sessions)
+2017-10-11 09:30:00,678 - benchsuite.backend.mongodb - DEBUG - Loading benchsuite.backend.mongodb.MongoDBStorageConnector
+2017-10-11 09:30:00,680 - benchsuite.backend.mongodb - INFO - MongoDBStorageConnector created for mongodb://localhost:27019/, db=benchmarking, coll=results
+f2f5c6c3-0878-4162-ae14-37ce3fc35d33
+2017-10-11 09:30:00,726 - benchsuite.core.sessionmanager - DEBUG - Benchmarking Sessions stored to /home/ggiammat/.local/share/benchmarking-suite/sessions.dat (61 sessions)
+
+last_session=2017-10-11 09:30:00,462 - benchsuite.core.config - DEBUG - Using default configuration directory: /home/ggiammat/.config/benchmarking-suite
+2017-10-11 09:30:00,463 - benchsuite.core.config - DEBUG - Using alternative configuration directory: /home/ggiammat/projects/ENG.CloudPerfect/workspace/testing/bsconfig
+2017-10-11 09:30:00,645 - benchsuite.core.sessionmanager - DEBUG - Benchmarking Sessions loaded from /home/ggiammat/.local/share/benchmarking-suite/sessions.dat (60 sessions)
+2017-10-11 09:30:00,678 - benchsuite.backend.mongodb - DEBUG - Loading benchsuite.backend.mongodb.MongoDBStorageConnector
+2017-10-11 09:30:00,680 - benchsuite.backend.mongodb - INFO - MongoDBStorageConnector created for mongodb://localhost:27019/, db=benchmarking, coll=results
+f2f5c6c3-0878-4162-ae14-37ce3fc35d33
+2017-10-11 09:30:00,726 - benchsuite.core.sessionmanager - DEBUG - Benchmarking Sessions stored to /home/ggiammat/.local/share/benchmarking-suite/sessions.dat
+"""
+
 
 if __name__ == '__main__':
 
-    logging.basicConfig(level=logging.DEBUG, stream=sys.stdout)
 
-    os.environ[CONFIG_FOLDER_VARIABLE_NAME] = '/home/ggiammat/projects/ENG.CloudPerfect/workspace/testing/bsconfig'
-
-
-    s = load_service_provider_from_config_file('/home/ggiammat/projects/ENG.CloudPerfect/workspace/testing/bsconfig/providers/amazon-us-west-1.conf', 'centos_medium')
-    #
-    # vm = VM('i-08c2f801d03d5d45a', None, None, None, None, None)
-    #
-    # s.vms_pool = [vm]
-    #
-    # s.destroy_service()
-
-    s.get_execution_environment(VMSetExecutionEnvironmentRequest(1))
+    import re
+    uuidre = re.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.MULTILINE)
+    result = uuidre.findall(OUTPUT)
+    print(result)
