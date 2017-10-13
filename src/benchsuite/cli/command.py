@@ -131,7 +131,7 @@ def collect_results_cmd(args):
 
 
 def run_execution_cmd(args):
-    with BenchmarkingController(args.config) as bc:
+    with BenchmarkingController(args.config, storage_config_file=args.storage_config) as bc:
         bc.run_execution(args.id, async=args.async)
 
 
@@ -146,7 +146,7 @@ def multiexec_cmd(args):
         else:
             tuples.append((t[0], t[1]))
 
-    with BenchmarkingController() as bc:
+    with BenchmarkingController(storage_config_file=args.storage_config) as bc:
         bc.execute_onestep(args.provider, args.service_type, tuples)
 
 

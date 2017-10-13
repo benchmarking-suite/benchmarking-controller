@@ -122,6 +122,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     sub_parser = subparsers.add_parser('run-exec',  help='Executes the execute scripts for an execution',
                                        epilog='Example: benchsuite run-exec 4a5a86d4-88b6-11e7-9f96-742b62857160')
 
+    sub_parser.add_argument('--storage-config', '-r', type=str,
+                            help='Specify a custom location for the storage configuration file')
+
     sub_parser.add_argument('id', type=str, help='a valid id of the execution')
     sub_parser.add_argument('--async', action='store_true', help='start the execution of the scripts and return (do not'
                                                                  ' wait for the execution to finish)')
@@ -172,6 +175,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     sub_parser.add_argument('--service-type', '-s', type=str,
                             help='The name of one of the service types defined in the provider configuration. If not '
                                  'specified, all service types will be used')
+
+    sub_parser.add_argument('--storage-config', '-r', type=str,
+                            help='Specify a custom location for the storage configuration file')
 
     sub_parser.add_argument('tests', nargs='+',
                             help='one or more tests in the format <tool>[:<workload>]. If workload is omitted, all '
