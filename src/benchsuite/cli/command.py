@@ -91,25 +91,28 @@ def destroy_session_cmd(args):
         print('Session {0} successfully destroyed'.format(args.id))
 
 
+def parse_new_session_properties(args):
+    props = {}
+
+    for i in args.property or []:
+        v = i.split("=")
+        if len(v) != 2:
+            raise CliParsingException('Cannot parse property "{0}". '
+                                      'The property must be in the format <name>=<value>'.format(i))
+        props[v[0]] = v[1]
+
+    if args.user:
+        props['user'] = args.user
+
+    if args.tag:
+        props['tags'] = args.tag
+
+    return props
+
+
 def new_session_cmd(args):
     with BenchmarkingController(args.config) as bc:
-
-        props = {}
-
-        for i in args.property or []:
-            v = i.split("=")
-            if len(v) != 2:
-                raise CliParsingException('Cannot parse property "{0}". '
-                                          'The property must be in the format <name>=<value>'.format(i))
-            props[v[0]] = v[1]
-
-        if args.user:
-            props['user'] = args.user
-
-        if args.tag:
-            props['tags'] = args.tag
-
-        e = bc.new_session(args.provider, args.service_type, properties = props)
+        e = bc.new_session(args.provider, args.service_type, properties = parse_new_session_properties(args))
         print(e.id)
 
 def new_execution_cmd(args):
@@ -147,7 +150,7 @@ def multiexec_cmd(args):
             tuples.append((t[0], t[1]))
 
     with BenchmarkingController(storage_config_file=args.storage_config) as bc:
-        bc.execute_onestep(args.provider, args.service_type, tuples)
+        bc.execute_onestep(args.provider, args.service_type, tuples, new_session_props=parse_new_session_properties(args))
 
 
 def start_shell_cmd(args):

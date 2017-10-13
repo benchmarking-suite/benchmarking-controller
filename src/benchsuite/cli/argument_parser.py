@@ -179,6 +179,18 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     sub_parser.add_argument('--storage-config', '-r', type=str,
                             help='Specify a custom location for the storage configuration file')
 
+    sub_parser.add_argument('--property', '-P', type=str, action='append',
+                            help='Add a user defined property to the session. The property must be expressed in the '
+                                 'format <name>=<value>')
+
+    sub_parser.add_argument('--user', '-u', type=str,
+                            help='sets the "user" property. It is a shortcut for "--property user=<name>')
+
+    sub_parser.add_argument('--tag', '-t', type=str, action='append',
+                            help='sets one or more session tags. Internally, tags are stored as properties')
+
+
+
     sub_parser.add_argument('tests', nargs='+',
                             help='one or more tests in the format <tool>[:<workload>]. If workload is omitted, all '
                                  '  workloads defined for that tool will be executed')
