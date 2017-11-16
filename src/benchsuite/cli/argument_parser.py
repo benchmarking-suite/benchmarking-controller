@@ -189,7 +189,8 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     sub_parser.add_argument('--tag', '-t', type=str, action='append',
                             help='sets one or more session tags. Internally, tags are stored as properties')
 
-
+    sub_parser.add_argument('--failonerror', '-e', action='store_true', default=False,
+                            help='If set exit immediately if one of the tests fail. It is false by default')
 
     sub_parser.add_argument('tests', nargs='+',
                             help='one or more tests in the format <tool>[:<workload>]. If workload is omitted, all '

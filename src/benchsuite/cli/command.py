@@ -150,7 +150,9 @@ def multiexec_cmd(args):
             tuples.append((t[0], t[1]))
 
     with BenchmarkingController(storage_config_file=args.storage_config) as bc:
-        bc.execute_onestep(args.provider, args.service_type, tuples, new_session_props=parse_new_session_properties(args))
+        bc.execute_onestep(args.provider, args.service_type, tuples,
+                           new_session_props=parse_new_session_properties(args),
+                           fail_on_error=args.failonerror)
 
 
 def start_shell_cmd(args):

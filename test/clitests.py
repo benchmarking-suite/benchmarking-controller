@@ -34,8 +34,8 @@ if __name__ == '__main__':
 
    os.environ['BENCHSUITE_PROVIDER'] = t
 
-   main('-vvv run-exec 123'.split())
-   #main('-vvv multiexec --provider amazon-us-west-1 filebench'.split())
+   #main('-vvv run-exec 123'.split())
+   main('-vvv multiexec --provider filab-vicenza -s ubuntu_16_small --failonerror idle:idle30'.split())
 
    #main('-vvv new-exec 1cbf3f39-c05a-4bf8-becc-42bc192dc71c idle idle30'.split())
 
