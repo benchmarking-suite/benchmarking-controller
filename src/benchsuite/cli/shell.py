@@ -34,6 +34,7 @@ class stream_tee(object):
         self.stream2 = stream2
         self.__missing_method_name = None  # Hack!
 
+
     def __getattribute__(self, name):
         return object.__getattribute__(self, name)
 
@@ -69,6 +70,8 @@ class BenchsuiteShell(cmd.Cmd):
         self.last_session = None
         self.last_execution = None
 
+    def emptyline(self):
+        pass
 
     def precmd(self, line):
 
@@ -139,6 +142,9 @@ class BenchsuiteShell(cmd.Cmd):
 
     def do_list_sessions(self, line):
         self.__call_cmdline('list-sessions', line)
+
+    def do_list_execs(self, line):
+        self.__call_cmdline('list-execs', line)
 
     def do_destroy_session(self, line):
         self.__call_cmdline('destroy-session', line)

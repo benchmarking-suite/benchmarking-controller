@@ -65,7 +65,7 @@ def list_executions_cmd(args):
         execs = bc.list_executions()
         for e in execs:
             created = datetime.fromtimestamp(e.created).strftime('%Y-%m-%d %H:%M:%S')
-            table.add_row([e.id, e.test.tool_name+'/'+e.test.workload_name, created, e.exec_env, e.session.id])
+            table.add_row([e.id, str(e.test.tool_name)+'/'+str(e.test.workload_name), created, str(e.exec_env), e.session.id])
 
     print(table.get_string())
 
