@@ -140,6 +140,8 @@ class BenchsuiteShell(cmd.Cmd):
     def do_list_sessions(self, line):
         self.__call_cmdline('list-sessions', line)
 
+    def do_destroy_session(self, line):
+        self.__call_cmdline('destroy-session', line)
 
     def do_EOF(self, line):
         return True
@@ -177,7 +179,5 @@ class BenchsuiteShell(cmd.Cmd):
         out = duplicated_stdout.read()
         duplicated_stdout.close()
         sys.stdout = old_stdout
-
-        print(out)
 
         return retcode, out
