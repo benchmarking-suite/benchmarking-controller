@@ -19,7 +19,10 @@
 
 import argparse
 
-from benchsuite.core.controller import PROVIDER_STRING_ENV_VAR_NAME, SERVICE_TYPE_STRING_ENV_VAR_NAME
+from argcomplete import warn
+
+from benchsuite.core.controller import PROVIDER_STRING_ENV_VAR_NAME, \
+    SERVICE_TYPE_STRING_ENV_VAR_NAME, BenchmarkingController
 
 DEFAULT_CMDS_MAPPING = {
     'new_session_cmd': None,
@@ -35,6 +38,50 @@ DEFAULT_CMDS_MAPPING = {
     'list_benchmarks_cmd': None,
     'start_shell_cmd': None
 }
+
+
+# functions to generate autocomplete items
+# BenchmarkingController not used with "with" to not trigger the storage
+# of sessions
+
+def completer_list_providers(prefix, parsed_args, **kwargs):
+    bc = BenchmarkingController()
+    return [p.name for p in bc.list_available_providers()]
+
+
+def completer_list_service_types(prefix, parsed_args, **kwargs):
+    if parsed_args.provider:
+        bc = BenchmarkingController()
+        prov = bc.configuration.get_provider_by_name(parsed_args.provider)
+        return prov.service_types
+    else:
+        return []
+
+def completer_most_recent_session(prefix, parsed_args, **kwargs):
+    bc = BenchmarkingController()
+    sessions = list(bc.list_sessions())
+    sessions.sort(key=lambda x: x.created, reverse=True)
+    return [sessions[0].id]
+
+
+def completer_most_recent_exec(prefix, parsed_args, **kwargs):
+    bc = BenchmarkingController()
+    execs = bc.list_executions()
+    execs.sort(key=lambda x: x.created, reverse=True)
+    return [execs[0].id]
+
+def completer_list_tools(prefix, parsed_args, **kwargs):
+    bc = BenchmarkingController()
+    return [t.id for t in bc.configuration.list_available_tools()]
+
+
+def completer_list_workloads(prefix, parsed_args, **kwargs):
+    if parsed_args.tool:
+        bc = BenchmarkingController()
+        tool_cfg = bc.get_benchmark_cfg(parsed_args.tool)
+
+    return [w['id'] for w in tool_cfg.workloads]
+
 
 
 def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
@@ -62,16 +109,18 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
                                        help='Creates a new benchmarking session',
                                        epilog='Example: benchsuite new-session -p myamazon -s centos_tiny')
 
-    sub_parser.add_argument('--provider', '-p', type=str,
+    x = sub_parser.add_argument('--provider', '-p', type=str,
                             help='The name for the service provider configuration or the filepath of the provider '
                                  'configuration file. Alternatively, the provider configuration can be specified in '
                                  'the environment variable {0} (the content of the variable must be the actual '
                                  'configuration not the filepath)'.format(PROVIDER_STRING_ENV_VAR_NAME))
+    x.completer = completer_list_providers
 
-    sub_parser.add_argument('--service-type', '-s',
+    x = sub_parser.add_argument('--service-type', '-s',
                             help='The name of one of the service types defined in the provider configuration. '
                                  'Alternatively, it can be specified in the {0} environment '
                                  'varaible'.format(SERVICE_TYPE_STRING_ENV_VAR_NAME))
+    x.completer = completer_list_service_types
 
     sub_parser.add_argument('--property', '-P', type=str, action='append',
                             help='Add a user defined property to the session. The property must be expressed in the '
@@ -97,9 +146,15 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
                                      epilog='Example: benchsuite new-exec 73cff747-d31a-488c-98f5-a70b9a77a11f '
                                             'filebench varmail')
 
-    sub_parser.add_argument('session', type=str, help='a valid session id')
-    sub_parser.add_argument('tool', type=str, help='a valid benchmarking tool')
-    sub_parser.add_argument('workload', type=str, help='a valid benchmarking tool workload')
+    x = sub_parser.add_argument('session', type=str, help='a valid session id')
+    x.completer = completer_most_recent_session
+
+    x = sub_parser.add_argument('tool', type=str, help='a valid benchmarking tool')
+    x.completer = completer_list_tools
+
+    x = sub_parser.add_argument('workload', type=str, help='a valid benchmarking tool workload')
+    x.completer = completer_list_workloads
+
     sub_parser.set_defaults(func=cmds_mapping['new_execution_cmd'])
 
 
@@ -111,7 +166,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     sub_parser = subparsers.add_parser('prepare-exec',
                                        help='Executes the install scripts for an execution',
                                        epilog='Example: benchsuite prepare-exec 4a5a86d4-88b6-11e7-9f96-742b62857160')
-    sub_parser.add_argument('id', type=str, help='a valid id of the execution')
+
+    x = sub_parser.add_argument('id', type=str, help='a valid id of the execution')
+    x.completer = completer_most_recent_exec
     sub_parser.set_defaults(func=cmds_mapping['prepare_execution_cmd'])
 
 
@@ -125,7 +182,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     sub_parser.add_argument('--storage-config', '-r', type=str,
                             help='Specify a custom location for the storage configuration file')
 
-    sub_parser.add_argument('id', type=str, help='a valid id of the execution')
+    x = sub_parser.add_argument('id', type=str, help='a valid id of the execution')
+    x.completer = completer_most_recent_exec
+
     sub_parser.add_argument('--async', action='store_true', help='start the execution of the scripts and return (do not'
                                                                  ' wait for the execution to finish)')
     sub_parser.set_defaults(func=cmds_mapping['run_execution_cmd'])
@@ -143,11 +202,6 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     parser_a = subparsers.add_parser('destroy-session', help='a help')
     parser_a.add_argument('id', type=str, help='bar help')
     parser_a.set_defaults(func=cmds_mapping['destroy_session_cmd'])
-
-
-
-
-
 
     parser_a = subparsers.add_parser('list-execs', help='lists the executions')
     parser_a.set_defaults(func=cmds_mapping['list_executions_cmd'])
@@ -199,3 +253,7 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     sub_parser.set_defaults(func=cmds_mapping['multiexec_cmd'])
 
     return parser
+
+
+if __name__ == '__main__':
+    print(completer_most_recent_exec(None, None))

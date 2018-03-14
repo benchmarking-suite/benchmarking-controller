@@ -19,6 +19,7 @@
 
 import logging
 import sys
+import argcomplete
 import traceback
 from datetime import datetime
 
@@ -180,6 +181,8 @@ cmds_mapping = {
 def main(args=None):
 
     parser = get_options_parser(cmds_mapping=cmds_mapping)
+
+    argcomplete.autocomplete(parser)
 
     args = parser.parse_args(args = args or sys.argv[1:])
 

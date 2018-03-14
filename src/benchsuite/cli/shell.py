@@ -146,6 +146,13 @@ class BenchsuiteShell(cmd.Cmd):
     def do_list_execs(self, line):
         self.__call_cmdline('list-execs', line)
 
+
+    def do_list_providers(self, line):
+        self.__call_cmdline('list-providers', line)
+
+    def do_list_benchmarks(self, line):
+        self.__call_cmdline('list-benchmarks', line)
+
     def do_destroy_session(self, line):
         self.__call_cmdline('destroy-session', line)
 
