@@ -100,7 +100,7 @@ def parse_new_session_properties(args):
         if len(v) != 2:
             raise CliParsingException('Cannot parse property "{0}". '
                                       'The property must be in the format <name>=<value>'.format(i))
-        props[v[0]] = v[1]
+        props[v[0].strip()] = v[1].strip()
 
     if args.user:
         props['user'] = args.user
@@ -239,6 +239,7 @@ def main(args=None):
             logging.root.addHandler(st)
             logging.root.setLevel(logging.DEBUG)
 
+        logger.debug('Running with following arguments: %s', args.__dict__)
     try:
 
         if not hasattr(args, 'func'):
