@@ -239,12 +239,13 @@ def main(args=None):
             logging.root.addHandler(st)
             logging.root.setLevel(logging.DEBUG)
 
-        logger.debug('Running with following arguments: %s', args.__dict__)
     try:
 
         if not hasattr(args, 'func'):
             print('A command must be specified. Run with --help  to check the different options')
             return 10
+
+        logger.debug('Running command "%s" with arguments: %s', args.func.__name__, args.__dict__)
 
         return args.func(args) or 0
 

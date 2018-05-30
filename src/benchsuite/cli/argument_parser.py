@@ -18,11 +18,15 @@
 # CloudPerfect EU project (https://cloudperfect.eu/)
 
 import argparse
+import os
+import time
 
 from argcomplete import warn
 
+from benchsuite.core.config import ControllerConfiguration
 from benchsuite.core.controller import PROVIDER_STRING_ENV_VAR_NAME, \
     SERVICE_TYPE_STRING_ENV_VAR_NAME, BenchmarkingController
+from benchsuite.core.sessionmanager import SessionStorageManager
 
 DEFAULT_CMDS_MAPPING = {
     'new_session_cmd': None,
@@ -41,25 +45,27 @@ DEFAULT_CMDS_MAPPING = {
 
 
 # functions to generate autocomplete items
-# BenchmarkingController not used with "with" to not trigger the storage
-# of sessions
+
 
 def completer_list_providers(prefix, parsed_args, **kwargs):
-    bc = BenchmarkingController()
-    return [p.name for p in bc.list_available_providers()]
+    conf = ControllerConfiguration(alternative_config_dir=os.environ.get('BENCHSUITE_CONFIG_FOLDER'))
+    return [p.name for p in conf.list_available_providers()]
 
 
 def completer_list_service_types(prefix, parsed_args, **kwargs):
     if parsed_args.provider:
-        bc = BenchmarkingController()
-        prov = bc.configuration.get_provider_by_name(parsed_args.provider)
+        conf = ControllerConfiguration(alternative_config_dir=os.environ.get('BENCHSUITE_CONFIG_FOLDER'))
+        prov = conf.get_provider_by_name(parsed_args.provider)
         return prov.service_types
     else:
         return []
 
+
 def completer_most_recent_session(prefix, parsed_args, **kwargs):
-    bc = BenchmarkingController()
-    sessions = list(bc.list_sessions())
+    conf = ControllerConfiguration(alternative_config_dir=os.environ.get('BENCHSUITE_CONFIG_FOLDER'))
+    session_storage = SessionStorageManager(conf.get_default_data_dir())
+    session_storage.load()
+    sessions = list(session_storage.list())
     sessions.sort(key=lambda x: x.created, reverse=True)
     return [sessions[0].id]
 
@@ -70,18 +76,17 @@ def completer_most_recent_exec(prefix, parsed_args, **kwargs):
     execs.sort(key=lambda x: x.created, reverse=True)
     return [execs[0].id]
 
+
 def completer_list_tools(prefix, parsed_args, **kwargs):
-    bc = BenchmarkingController()
-    return [t.id for t in bc.configuration.list_available_tools()]
+    conf = ControllerConfiguration(alternative_config_dir=os.environ.get('BENCHSUITE_CONFIG_FOLDER'))
+    return [t.id for t in conf.list_available_tools()]
 
 
 def completer_list_workloads(prefix, parsed_args, **kwargs):
     if parsed_args.tool:
-        bc = BenchmarkingController()
-        tool_cfg = bc.get_benchmark_cfg(parsed_args.tool)
-
-    return [w['id'] for w in tool_cfg.workloads]
-
+        conf = ControllerConfiguration(alternative_config_dir=os.environ.get('BENCHSUITE_CONFIG_FOLDER'))
+        tool_cfg = conf.get_benchmark_by_name(parsed_args.tool)
+        return [w['id'] for w in tool_cfg.workloads]
 
 
 def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
@@ -222,13 +227,15 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
                                        epilog='Example: benchsuite multiexec -p myamazon -s centos_tiny cfd:workload1 '
                                               'ycsb:workloada ycsb:workloadb')
 
-    sub_parser.add_argument('--provider', '-p', type=str,
+    x = sub_parser.add_argument('--provider', '-p', type=str,
                             help='The name for the service provider configuration or the filepath of the provider '
                                  'configuration file')
+    x.completer = completer_list_providers
 
-    sub_parser.add_argument('--service-type', '-s', type=str,
+    x = sub_parser.add_argument('--service-type', '-s', type=str,
                             help='The name of one of the service types defined in the provider configuration. If not '
                                  'specified, all service types will be used')
+    x.completer = completer_list_service_types
 
     sub_parser.add_argument('--storage-config', '-r', type=str,
                             help='Specify a custom location for the storage configuration file')
@@ -254,6 +261,3 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
 
     return parser
 
-
-if __name__ == '__main__':
-    print(completer_most_recent_exec(None, None))
