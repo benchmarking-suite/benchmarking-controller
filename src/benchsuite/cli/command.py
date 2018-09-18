@@ -153,7 +153,8 @@ def multiexec_cmd(args):
     with BenchmarkingController(storage_config_file=args.storage_config) as bc:
         bc.execute_onestep(args.provider, args.service_type, tuples,
                            new_session_props=parse_new_session_properties(args),
-                           fail_on_error=args.failonerror)
+                           fail_on_error=args.failonerror,
+                           destroy_session=not args.keep_env)
 
 
 def start_shell_cmd(args):
