@@ -256,6 +256,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     sub_parser.add_argument('--keep-env', '-k', action='store_true', default=False,
                             help='If set, doesn\'t destroy the session after the end of the tests')
 
+    sub_parser.add_argument('--max-retry', '-m', type=int,
+                            help='If a test fails, retry for a maximum of max-retry times (default is 1)')
+
     sub_parser.add_argument('tests', nargs='+',
                             help='one or more tests in the format <tool>[:<workload>]. If workload is omitted, all '
                                  '  workloads defined for that tool will be executed')

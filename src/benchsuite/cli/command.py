@@ -154,7 +154,8 @@ def multiexec_cmd(args):
         bc.execute_onestep(args.provider, args.service_type, tuples,
                            new_session_props=parse_new_session_properties(args),
                            fail_on_error=args.failonerror,
-                           destroy_session=not args.keep_env)
+                           destroy_session=not args.keep_env,
+                           max_retry=args.max_retry or 1)
 
 
 def start_shell_cmd(args):
