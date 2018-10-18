@@ -24,18 +24,12 @@ from benchsuite.core.controller import CONFIG_FOLDER_ENV_VAR_NAME
 
 if __name__ == '__main__':
 
-   os.environ[CONFIG_FOLDER_ENV_VAR_NAME] = '/home/ggiammat/projects/ENG.CloudPerfect/workspace/testing/bsconfig'
-   os.environ['BENCHSUITE_SERVICE_TYPE'] = 'ubuntu_small'
+   os.environ['BENCHSUITE_CONFIG_FOLDER'] = '/home/ggiammat/test/benchsuite'
 
-
-
-   with open('/home/ggiammat/projects/ENG.CloudPerfect/workspace/testing/bsconfig/providers/filab-vicenza.conf') as f:
-      t = f.read()
-
-   os.environ['BENCHSUITE_PROVIDER'] = t
+   main('-vvv multiexec -p aws -s vm_large1 idle:idle5'.split())
 
    #main('-vvv run-exec 123'.split())
-   main('-vvv multiexec --provider filab-vicenza -s ubuntu_16_small --failonerror idle:idle30'.split())
+   #main('-vvv run-exec f2c47244-7465-11e8-8a73-742b62857160'.split())
 
    #main('-vvv new-exec 1cbf3f39-c05a-4bf8-becc-42bc192dc71c idle idle30'.split())
 

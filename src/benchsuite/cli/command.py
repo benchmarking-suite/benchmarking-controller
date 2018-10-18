@@ -256,9 +256,11 @@ def main(args=None):
         return 1
 
     except Exception as e:
-        print('ERROR!!! An exception occured: "{0}" (run with -v to see the stacktrace)'.format(str(e)))
+        print('Exiting due to fatal error:')
         if args.verbose and args.verbose > 0:
             traceback.print_exc()
+        else:
+            print('An exception occured: "{0}" (run with -v to see the stacktrace)'.format(str(e)))
         return 100
 
 
