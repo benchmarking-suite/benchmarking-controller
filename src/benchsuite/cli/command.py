@@ -28,7 +28,8 @@ from prettytable import PrettyTable
 from benchsuite.cli.argument_parser import get_options_parser
 from benchsuite.cli.shell import BenchsuiteShell
 from benchsuite.core.controller import BenchmarkingController
-from benchsuite.core.model.exception import BashCommandExecutionFailedException, BaseBenchmarkingSuiteException
+from benchsuite.core.model.exception import BashCommandExecutionFailedException, \
+    BaseBenchmarkingSuiteException, ControllerConfigurationException
 
 RUNTIME_NOT_AVAILABLE_RETURN_CODE = 1
 
@@ -252,15 +253,19 @@ def main(args=None):
         return args.func(args) or 0
 
 
-    except BashCommandExecutionFailedException as e:
-        return 1
-
     except Exception as e:
-        print('Exiting due to fatal error:')
+        print('Exiting due to fatal error: {0}'.format(str(e)))
         if args.verbose and args.verbose > 0:
             traceback.print_exc()
         else:
-            print('An exception occured: "{0}" (run with -v to see the stacktrace)'.format(str(e)))
+            print('Run with -v to see the stacktrace')
+
+        if type(e) is ControllerConfigurationException:
+            return 1
+
+        if type(e) is BashCommandExecutionFailedException:
+            return 2
+
         return 100
 
 
