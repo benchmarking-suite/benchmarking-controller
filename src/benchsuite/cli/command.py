@@ -127,6 +127,9 @@ def prepare_execution_cmd(args):
     with BenchmarkingController(args.config) as bc:
         bc.prepare_execution(args.id)
 
+def cleanup_execution_cmd(args):
+    with BenchmarkingController(args.config) as bc:
+        bc.cleanup_execution(args.id)
 
 def collect_results_cmd(args):
     with BenchmarkingController(args.config) as bc:
@@ -171,6 +174,7 @@ cmds_mapping = {
     'new_execution_cmd': new_execution_cmd,
     'prepare_execution_cmd': prepare_execution_cmd,
     'run_execution_cmd': run_execution_cmd,
+    'cleanup_execution_cmd': cleanup_execution_cmd,
     'collect_results_cmd': collect_results_cmd,
     'multiexec_cmd': multiexec_cmd,
     'list_executions_cmd': list_executions_cmd,

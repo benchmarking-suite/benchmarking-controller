@@ -34,6 +34,7 @@ DEFAULT_CMDS_MAPPING = {
     'destroy_session_cmd': None,
     'new_execution_cmd': None,
     'prepare_execution_cmd': None,
+    'cleanup_execution_cmd': None,
     'run_execution_cmd': None,
     'collect_results_cmd': None,
     'multiexec_cmd': None,
@@ -175,6 +176,20 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     x = sub_parser.add_argument('id', type=str, help='a valid id of the execution')
     x.completer = completer_most_recent_exec
     sub_parser.set_defaults(func=cmds_mapping['prepare_execution_cmd'])
+
+
+
+    #
+    # CLEANUP EXEC
+    #
+
+    sub_parser = subparsers.add_parser('cleanup-exec',
+                                       help='Executed the cleanup script for an execution',
+                                       epilog='Example: benchsuite cleanup-exec 4a5a86d4-88b6-11e7-9f96-742b62857160')
+    x = sub_parser.add_argument('id', type=str, help='a valid id of the execution')
+    x.completer = completer_most_recent_exec
+    sub_parser.set_defaults(func=cmds_mapping['cleanup_execution_cmd'])
+
 
 
     #
