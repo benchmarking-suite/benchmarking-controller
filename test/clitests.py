@@ -26,7 +26,9 @@ if __name__ == '__main__':
 
    os.environ['BENCHSUITE_CONFIG_FOLDER'] = '/home/ggiammat/test/benchsuite'
 
-   main('-vvv multiexec -p aws -s vm_large1 idle:idle5'.split())
+   #main('-vvv multiexec -p fiware -s ubuntu_16_small iperf:tcp_traffic'.split())
+
+   main('-vvv run-exec 005aa34c-f5bc-11e8-903e-9c4e36dc7538'.split())
 
    #main('-vvv run-exec 123'.split())
    #main('-vvv run-exec f2c47244-7465-11e8-8a73-742b62857160'.split())

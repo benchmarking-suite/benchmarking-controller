@@ -133,15 +133,15 @@ def cleanup_execution_cmd(args):
 
 def collect_results_cmd(args):
     with BenchmarkingController(args.config) as bc:
-        out, err = bc.collect_execution_results(args.id)
-        print(str(out))
-        print(str(err))
-
+        logs = bc.collect_execution_results(args.id)
+        for i in logs:
+            print('***** VM: {0} *****'.format(i['vm']))
+            print('stdout:\n{0}'.format(str(i['stdout'])))
+            print('\nstderr:\n{0}\n\n'.format(str(i['stderr'])))
 
 def run_execution_cmd(args):
     with BenchmarkingController(args.config, storage_config_file=args.storage_config) as bc:
         bc.run_execution(args.id, async=args.async)
-
 
 def multiexec_cmd(args):
 
@@ -209,15 +209,15 @@ def main(args=None):
     if args.verbose:
         if args.verbose == 1:
             logging_level = logging.INFO
-            logging_format = '%(message)s'
+            logging_format = '%(asctime)s - %(name)s - %(levelname)s: %(message)s'
 
         if args.verbose == 2:
             logging_level = logging.DEBUG
-            logging_format = '%(levelname)s: %(message)s'
+            logging_format = '%(asctime)s - %(name)s - %(levelname)s: %(message)s'
 
         if args.verbose > 2:
             logging_level = logging.DEBUG
-            logging_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+            logging_format = '%(asctime)s - %(name)s - %(levelname)s: %(message)s'
 
 
     # if the user sets the --quiet flag, do not print logging messages. Only print() messages will appear on the screen
