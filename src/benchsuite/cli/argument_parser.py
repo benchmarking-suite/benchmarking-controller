@@ -205,8 +205,9 @@ def get_options_parser(cmds_mapping=DEFAULT_CMDS_MAPPING):
     x = sub_parser.add_argument('id', type=str, help='a valid id of the execution')
     x.completer = completer_most_recent_exec
 
-    sub_parser.add_argument('--async', action='store_true', help='start the execution of the scripts and return (do not'
-                                                                 ' wait for the execution to finish)')
+    sub_parser.add_argument('--async', action='store_true', dest='_async', help='start the execution of the scripts '
+                                                                                'and return (do not wait for the '
+                                                                                'execution to finish)')
     sub_parser.set_defaults(func=cmds_mapping['run_execution_cmd'])
 
 

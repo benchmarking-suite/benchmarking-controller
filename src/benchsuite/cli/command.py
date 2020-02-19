@@ -141,7 +141,7 @@ def collect_results_cmd(args):
 
 def run_execution_cmd(args):
     with BenchmarkingController(args.config, storage_config_file=args.storage_config) as bc:
-        bc.run_execution(args.id, async=args.async)
+        bc.run_execution(args.id, _async=args._async)
 
 def multiexec_cmd(args):
 
