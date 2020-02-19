@@ -90,10 +90,10 @@ setup(
     data_files = [('man/man1', ['benchsuite.1'])],
 
     setup_requires=['argparse-manpage==0.0.1'],
-    install_requires=['prettytable', 'benchsuite.core', 'argcomplete'],
-    dependency_links=[
-        'https://github.com/gabrielegiammatteo/build_manpage/zipball/master#egg=argparse-manpage-0.0.1'
-    ],
+    install_requires=['prettytable',
+                      'benchsuite.core',
+                      'argcomplete',
+                      'argparse-manpage @ git+https://github.com/gabrielegiammatteo/build_manpage.git'],
 
     cmdclass={'install': CustomInstallCmd},
 )
